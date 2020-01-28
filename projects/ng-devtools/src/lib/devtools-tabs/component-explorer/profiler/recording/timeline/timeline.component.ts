@@ -33,7 +33,7 @@ export class TimelineComponent {
     return this.timeline.aggregated;
   }
 
-  updateView($event: MatSliderChange) {
+  updateView($event: MatSliderChange): void {
     if ($event.value === undefined || $event.value > this.timeline.timeline.length) {
       return;
     }
@@ -41,7 +41,7 @@ export class TimelineComponent {
     this.slider.value = this.currentView;
   }
 
-  move(number: number) {
+  move(number: number): void {
     const newVal = this.currentView + number;
     if (newVal > 0 && newVal < this.timeline.timeline.length) {
       this.currentView = newVal;

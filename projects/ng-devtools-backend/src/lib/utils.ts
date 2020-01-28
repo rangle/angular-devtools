@@ -1,4 +1,4 @@
-export const runOutsideAngular = (f: () => any) => {
+export const runOutsideAngular = (f: () => any): void => {
   const w = window as any;
   if (!w.Zone || w.Zone.current._name !== 'angular') {
     return;
@@ -6,4 +6,5 @@ export const runOutsideAngular = (f: () => any) => {
   w.Zone.current._parent.run(f);
 };
 
-export const componentMetadata = (instance: any) => instance.constructor['ɵcmp'];
+export const componentMetadata = (instance: any) => instance.constructor.ɵcmp;
+
