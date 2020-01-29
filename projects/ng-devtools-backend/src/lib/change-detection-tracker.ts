@@ -1,5 +1,5 @@
 import { getDirectiveForest, ComponentTreeNode } from './component-tree';
-import { runOutsideAngular, componentMetadata } from './utils';
+import { runOutsideAngular, componentMetadata, patchTemplate } from './utils';
 
 let hookInitialized = false;
 
@@ -21,14 +21,10 @@ const listenAndNotifyOnUpdates = (roots: ComponentTreeNode[], callback: () => vo
       console.warn('Could not find component instance on root');
       return;
     }
-    const { instance } = component;
-    const metadata = componentMetadata(instance);
-    const bak = metadata.template;
-    metadata.tView.template = function() {
-      bak.apply(this, arguments);
+    patchTemplate(component.instance, () => {
       runOutsideAngular(() => {
-        setTimeout(() => callback, 0);
+        setTimeout(callback, 0);
       });
-    };
+    });
   });
 };

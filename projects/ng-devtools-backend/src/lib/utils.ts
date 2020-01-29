@@ -8,3 +8,16 @@ export const runOutsideAngular = (f: () => any): void => {
 
 export const componentMetadata = (instance: any) => instance.constructor.ɵcmp;
 
+export const patchTemplate = (instance: any, fn: () => void) => {
+  const metadata = componentMetadata(instance);
+  const original = metadata.template;
+
+  metadata.tView.template = metadata.template = function () {
+    const result = original.apply(this, arguments);
+    fn();
+    return result;
+  };
+
+  return original;
+};
+
