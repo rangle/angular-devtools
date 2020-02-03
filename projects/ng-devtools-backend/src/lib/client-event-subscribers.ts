@@ -11,11 +11,10 @@ import { start as startProfiling, stop as stopProfiling } from './recording';
 import { serializeComponentState } from './state-serializer';
 import { ComponentInspector } from './component-inspector';
 import { setConsoleReference } from './selected-component';
-import { unHighlight, highlight } from './highlighter';
+import { unHighlight } from './highlighter';
 
 const inspector: ComponentInspector = new ComponentInspector();
 
-const startInspecting = () => inspector.startInspecting();
 const stopInspecting = () => inspector.stopInspecting();
 
 export const subscribeToClientEvents = (messageBus: MessageBus<Events>): void => {
@@ -28,7 +27,7 @@ export const subscribeToClientEvents = (messageBus: MessageBus<Events>): void =>
   messageBus.on('startProfiling', startProfiling);
   messageBus.on('stopProfiling', stopProfilingCallback(messageBus));
 
-  messageBus.on('inspectorStart', startInspecting);
+  messageBus.on('inspectorStart', startInspectingCallback(messageBus));
   messageBus.on('inspectorEnd', stopInspecting);
 
   messageBus.on('getElementDirectivesProperties', getElementDirectivesPropertiesCallback(messageBus));
@@ -39,7 +38,7 @@ export const subscribeToClientEvents = (messageBus: MessageBus<Events>): void =>
 
   messageBus.on('highlightElementFromComponentTree', highlightElementFromComponentTreeCallback);
 
-  messageBus.on('removeHighlightElementFromComponentTree', unHighlight);
+  messageBus.on('removeHighlightFromElement', unHighlight);
 };
 
 //
@@ -56,6 +55,10 @@ const getLatestComponentExplorerViewCallback = (messageBus: MessageBus<Events>) 
 };
 
 const checkForAngularCallback = (messageBus: MessageBus<Events>) => () => checkForAngular(messageBus);
+
+const startInspectingCallback = (messageBus: MessageBus<Events>) => () => {
+  inspector.startInspecting(messageBus);
+};
 
 const stopProfilingCallback = (messageBus: MessageBus<Events>) => () => {
   messageBus.emit('profilerResults', [stopProfiling()]);

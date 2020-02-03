@@ -1,4 +1,13 @@
-import { Component, Input, EventEmitter, HostListener, Output, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  Input,
+  EventEmitter,
+  HostListener,
+  Output,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+} from '@angular/core';
 import { MessageBus, Events, Node, ElementID } from 'protocol';
 import { FlatTreeControl, CdkTree } from '@angular/cdk/tree';
 import { FlatNode, ComponentDataSource } from './component-data-source';
@@ -11,7 +20,7 @@ import { isChildOf, parentCollapsed } from './component-tree-utils';
   templateUrl: './component-tree.component.html',
   styleUrls: ['./component-tree.component.css'],
 })
-export class ComponentTreeComponent {
+export class ComponentTreeComponent implements AfterViewInit {
   @Input() set forest(forest: Node[]) {
     this.dataSource.update(forest);
     if (!this._initialized && forest && forest.length) {
@@ -26,7 +35,6 @@ export class ComponentTreeComponent {
 
   @ViewChild(CdkTree) tree: CdkTree<any>;
 
-
   selectedNode: FlatNode | null = null;
   treeControl = new FlatTreeControl<FlatNode>(
     node => node.level,
@@ -37,8 +45,22 @@ export class ComponentTreeComponent {
   private _initialized = false;
 
   hasChild = (_: number, node: FlatNode) => node.expandable;
+  highlighted = null;
 
   constructor(private _host: ElementRef) {}
+
+  ngAfterViewInit() {
+    this.messageBus.on('highlightComponentInTreeFromElement', id => this.highlightComponent(id));
+    this.messageBus.on('removeHighlightFromComponentTree', () => this.unHighlightComponent());
+  }
+
+  highlightComponent(id: ElementID): void {
+    this.highlighted = id;
+  }
+
+  unHighlightComponent(): void {
+    this.highlighted = null;
+  }
 
   select(node: FlatNode): void {
     this.selectNode.emit(node.original);
@@ -63,7 +85,7 @@ export class ComponentTreeComponent {
   }
 
   removeHighlight(): void {
-    this.messageBus.emit('removeHighlightElementFromComponentTree');
+    this.messageBus.emit('removeHighlightFromElement');
   }
 
   @HostListener('document:keydown.ArrowUp', ['$event'])
@@ -139,5 +161,11 @@ export class ComponentTreeComponent {
     }
     return this.selectedNode.id.join(',') === node.id.join(',');
   }
-}
 
+  isHighlighted(node: FlatNode): boolean {
+    if (!this.highlighted) {
+      return false;
+    }
+    return this.highlighted.join(',') === node.id.join(',');
+  }
+}

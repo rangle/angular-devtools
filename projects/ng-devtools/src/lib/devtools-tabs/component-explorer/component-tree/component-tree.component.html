@@ -1,6 +1,7 @@
 <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
   <mat-tree-node
     [class.selected]="isSelected(node)"
+    [class.highlighted]="isHighlighted(node)"
     (click)="select(node)"
     (mouseenter)="highlightNode(node.id)"
     (mouseleave)="removeHighlight()"
@@ -14,6 +15,7 @@
   </mat-tree-node>
   <mat-tree-node
     [class.selected]="isSelected(node)"
+    [class.highlighted]="isHighlighted(node)"
     (click)="select(node)"
     (mouseenter)="highlightNode(node.id)"
     (mouseleave)="removeHighlight()"

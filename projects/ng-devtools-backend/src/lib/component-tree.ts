@@ -11,6 +11,7 @@ import {
   DirectivesProperties,
 } from 'protocol';
 import { getComponentName } from './highlighter';
+import { IndexedNode } from './recording/observer';
 
 export interface DirectiveInstanceType extends DirectiveType {
   instance: any;
@@ -159,6 +160,23 @@ export const queryComponentForest = (id: ElementID, forest: ComponentTreeNode[])
 };
 
 export const findNodeInForest = (id: ElementID, forest: ComponentTreeNode[]): HTMLElement | null => {
-  const foundComponent = queryComponentForest(id, forest);
+  const foundComponent: ComponentTreeNode = queryComponentForest(id, forest);
   return foundComponent ? foundComponent.nativeElement as HTMLElement : null;
+};
+
+export const getIndexForNativeElementInForest = (nativeElement: HTMLElement, forest: IndexedNode[]): ElementID | null => {
+  let foundElementId: ElementID = findNativeElementInForest(forest, nativeElement);
+  return foundElementId || null;
+}
+
+const findNativeElementInForest = (forest: IndexedNode[], nativeElement: HTMLElement): ElementID | null => {
+  for(let i = 0; i < forest.length; i++) {
+    const component = forest[i];
+    if(component.nativeElement === nativeElement) {
+      return component.id;
+    }
+    if(component.children.length) {
+      return findNativeElementInForest(component.children, nativeElement);
+    }
+  }
 };
