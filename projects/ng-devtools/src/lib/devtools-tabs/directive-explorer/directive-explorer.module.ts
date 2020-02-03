@@ -6,11 +6,10 @@ import { DirectiveExplorerComponent } from './directive-explorer.component';
 import { DirectiveForestComponent } from './directive-forest/directive-forest.component';
 import { PropertyViewModule } from './property-view/property-view.module';
 import { MatTreeModule } from '@angular/material/tree';
-import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [DirectiveExplorerComponent, DirectiveForestComponent],
   exports: [DirectiveExplorerComponent],
-  imports: [MatTreeModule, MatIconModule, CommonModule, PropertyViewModule, FormsModule],
+  imports: [MatTreeModule, MatIconModule, CommonModule, PropertyViewModule],
 })
 export class DirectiveExplorerModule {}
