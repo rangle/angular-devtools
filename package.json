@@ -7,7 +7,9 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "test:ng-devtools": "ng test ng-devtools --watch=false --codeCoverage=true",
+    "test:ng-devtools-backend": "ng test ng-devtools-backend --watch=false --codeCoverage=true"
   },
   "private": true,
   "dependencies": {
