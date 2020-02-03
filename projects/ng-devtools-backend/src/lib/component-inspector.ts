@@ -1,5 +1,7 @@
 import { unHighlight, highlight, findComponentAndHost } from './highlighter';
 import { Type } from '@angular/core';
+import { getForestWithNativeElements, ComponentTreeNode, findNodeInForest } from './component-tree';
+import { ElementID } from 'protocol';
 
 export class ComponentInspector {
   private _selectedComponent: { component: Type<unknown>, host: HTMLElement };
@@ -54,5 +56,11 @@ export class ComponentInspector {
     this.startInspecting = this.startInspecting.bind(this);
     this.stopInspecting = this.stopInspecting.bind(this);
     this.elementMouseOver = this.elementMouseOver.bind(this);
+  }
+
+  highlightById(id: ElementID): void {
+    const forest: ComponentTreeNode[] = getForestWithNativeElements();
+    const elementToHighlight: HTMLElement = findNodeInForest(id, forest);
+    highlight(elementToHighlight);
   }
 }

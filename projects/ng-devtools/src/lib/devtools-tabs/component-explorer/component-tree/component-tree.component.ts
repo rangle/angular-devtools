@@ -1,5 +1,5 @@
 import { Component, Input, EventEmitter, HostListener, Output, ViewChild, ElementRef } from '@angular/core';
-import { Node } from 'protocol';
+import { MessageBus, Events, Node, ElementID } from 'protocol';
 import { FlatTreeControl, CdkTree } from '@angular/cdk/tree';
 import { FlatNode, ComponentDataSource } from './component-data-source';
 
@@ -19,6 +19,8 @@ export class ComponentTreeComponent {
       this._initialized = true;
     }
   }
+
+  @Input() messageBus: MessageBus<Events>;
 
   @Output() selectNode = new EventEmitter();
 
@@ -54,6 +56,14 @@ export class ComponentTreeComponent {
         inline: 'nearest',
       });
     }, 0);
+  }
+
+  highlightNode(id: ElementID): void {
+    this.messageBus.emit('highlightElementFromComponentTree', [id]);
+  }
+
+  removeHighlight(): void {
+    this.messageBus.emit('removeHighlightElementFromComponentTree');
   }
 
   @HostListener('document:keydown.ArrowUp', ['$event'])

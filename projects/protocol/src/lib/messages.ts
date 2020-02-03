@@ -132,4 +132,6 @@ export interface Events {
   startProfiling: () => void;
   stopProfiling: () => void;
   profilerResults: (results: AppRecord[]) => void;
+  highlightElementFromComponentTree: (id: ElementID) => void;
+  removeHighlightElementFromComponentTree: () => void;
 }

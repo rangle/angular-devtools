@@ -2,6 +2,8 @@
   <mat-tree-node
     [class.selected]="isSelected(node)"
     (click)="select(node)"
+    (mouseenter)="highlightNode(node.id)"
+    (mouseleave)="removeHighlight()"
     *matTreeNodeDef="let node"
     matTreeNodePaddingIndent="20"
     matTreeNodePadding
@@ -13,6 +15,8 @@
   <mat-tree-node
     [class.selected]="isSelected(node)"
     (click)="select(node)"
+    (mouseenter)="highlightNode(node.id)"
+    (mouseleave)="removeHighlight()"
     *matTreeNodeDef="let node; when: hasChild"
     matTreeNodePaddingIndent="20"
     matTreeNodePadding

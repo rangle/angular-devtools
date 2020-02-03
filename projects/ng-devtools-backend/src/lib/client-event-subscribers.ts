@@ -11,6 +11,7 @@ import { start as startProfiling, stop as stopProfiling } from './recording';
 import { serializeComponentState } from './state-serializer';
 import { ComponentInspector } from './component-inspector';
 import { setConsoleReference } from './selected-component';
+import { unHighlight, highlight } from './highlighter';
 
 const inspector: ComponentInspector = new ComponentInspector();
 
@@ -35,6 +36,10 @@ export const subscribeToClientEvents = (messageBus: MessageBus<Events>): void =>
   messageBus.on('setSelectedComponent', selectedComponentCallback);
 
   messageBus.on('getNestedProperties', getNestedPropertiesCallback(messageBus));
+
+  messageBus.on('highlightElementFromComponentTree', highlightElementFromComponentTreeCallback);
+
+  messageBus.on('removeHighlightElementFromComponentTree', unHighlight);
 };
 
 //
@@ -85,6 +90,8 @@ const getNestedPropertiesCallback = (messageBus: MessageBus<Events>) => (id: Dir
     messageBus.emit('nestedProperties', [id, { props: {} }, propPath]);
   }
 };
+
+const highlightElementFromComponentTreeCallback = (id: ElementID) => { inspector.highlightById(id); };
 
 //
 // Subscribe Helpers

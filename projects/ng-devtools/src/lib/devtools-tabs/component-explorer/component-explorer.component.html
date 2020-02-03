@@ -1,4 +1,8 @@
-<ng-component-tree (selectNode)="handleNodeSelection($event)" [forest]="forest"> </ng-component-tree>
+<ng-component-tree
+  (selectNode)="handleNodeSelection($event)"
+  [forest]="forest"
+  [messageBus]="messageBus"
+></ng-component-tree>
 <div *ngIf="currentSelectedElement" class="property-wrapper">
   <div *ngFor="let data of directivesData | keyvalue; trackBy: nameTracking" class="explorer-panel">
     <header>Properties of {{ data.key }}</header>

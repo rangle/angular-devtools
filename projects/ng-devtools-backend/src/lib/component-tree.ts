@@ -157,3 +157,8 @@ export const queryComponentForest = (id: ElementID, forest: ComponentTreeNode[])
   }
   return node;
 };
+
+export const findNodeInForest = (id: ElementID, forest: ComponentTreeNode[]): HTMLElement | null => {
+  const foundComponent = queryComponentForest(id, forest);
+  return foundComponent ? foundComponent.nativeElement as HTMLElement : null;
+};
