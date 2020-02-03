@@ -182,9 +182,9 @@ export class DirectiveForestComponent {
   }
 
   nextMatched(): void {
-    const filteredTree: FlatNode[] = this._findMatchedNodes();
-    this.currentlyMatchedIndex = (this.currentlyMatchedIndex + 1) % filteredTree.length;
-    const nodeToSelect = filteredTree[this.currentlyMatchedIndex];
+    const matchedTree: FlatNode[] = this._findMatchedNodes();
+    this.currentlyMatchedIndex = (this.currentlyMatchedIndex + 1) % matchedTree.length;
+    const nodeToSelect = matchedTree[this.currentlyMatchedIndex];
     const nodeIsVisible = this.dataSource.expandedDataValues.find((node) => node === nodeToSelect);
     if (!nodeIsVisible) {
       this.expandParents(nodeToSelect);
@@ -195,9 +195,9 @@ export class DirectiveForestComponent {
   }
 
   prevMatched(): void {
-    const filteredTree: FlatNode[] = this._findMatchedNodes();
-    this.currentlyMatchedIndex = (this.currentlyMatchedIndex - 1 + filteredTree.length) % filteredTree.length;
-    const nodeToSelect = filteredTree[this.currentlyMatchedIndex];
+    const matchedTree: FlatNode[] = this._findMatchedNodes();
+    this.currentlyMatchedIndex = (this.currentlyMatchedIndex - 1 + matchedTree.length) % matchedTree.length;
+    const nodeToSelect = matchedTree[this.currentlyMatchedIndex];
     const nodeIsVisible = this.dataSource.expandedDataValues.find((node) => node === nodeToSelect);
     if (!nodeIsVisible) {
       this.expandParents(nodeToSelect);
