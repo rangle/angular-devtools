@@ -1,7 +1,7 @@
 import { unHighlight, highlight, findComponentAndHost } from './highlighter';
 import { Type } from '@angular/core';
 import {
-  getForestWithNativeElements,
+  getDirectiveForest,
   ComponentTreeNode,
   findNodeInForest,
   getIndexForNativeElementInForest,
@@ -53,7 +53,7 @@ export class ComponentInspector {
     unHighlight();
     if (this._selectedComponent.component) {
       highlight(this._selectedComponent.host);
-      const forest: IndexedNode[] = indexForest(getForestWithNativeElements());
+      const forest: IndexedNode[] = indexForest(getDirectiveForest());
       const elementId: ElementID = getIndexForNativeElementInForest(this._selectedComponent.host, forest);
       this._messageBus.emit('highlightComponentInTreeFromElement', [elementId]);
     }
@@ -73,7 +73,7 @@ export class ComponentInspector {
   }
 
   highlightById(id: ElementID): void {
-    const forest: ComponentTreeNode[] = getForestWithNativeElements();
+    const forest: ComponentTreeNode[] = getDirectiveForest();
     const elementToHighlight: HTMLElement = findNodeInForest(id, forest);
     highlight(elementToHighlight);
   }
