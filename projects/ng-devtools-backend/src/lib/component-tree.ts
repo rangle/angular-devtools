@@ -27,7 +27,6 @@ export interface ComponentTreeNode extends Node<DirectiveInstanceType, Component
 
 export interface DirectiveForestBuilderOptions {
   getDirectives?: boolean;
-  includeNativeElement?: boolean;
 }
 
 export const getLatestComponentState = (query: ComponentExplorerViewQuery): DirectivesProperties | undefined => {
@@ -64,7 +63,7 @@ export const getLatestComponentState = (query: ComponentExplorerViewQuery): Dire
 // Here we drop properties to prepare the tree for serialization.
 // We don't need the component instance, so we just traverse the tree
 // and leave the component name.
-export const trimComponents = (roots: ComponentTreeNode[]): ComponentTreeNode[] => {
+export const prepareForestForSerialization = (roots: ComponentTreeNode[]): ComponentTreeNode[] => {
   return roots.map(node => {
     return {
       element: node.element,
@@ -74,13 +73,10 @@ export const trimComponents = (roots: ComponentTreeNode[]): ComponentTreeNode[] 
         }
         : null,
       directives: node.directives.map(d => ({ name: d.name })),
-      children: trimComponents(node.children),
+      children: prepareForestForSerialization(node.children),
     } as ComponentTreeNode;
   });
 };
-
-export const getForestWithNativeElements = (root = document.documentElement): ComponentTreeNode[] =>
-  buildDirectiveForest(root, { element: '__ROOT__', component: null, directives: [], children: [] }, { getDirectives: true, includeNativeElement: true});
 
 export const getDirectiveForest = (root = document.documentElement): ComponentTreeNode[] =>
   buildDirectiveForest(root, { element: '__ROOT__', component: null, directives: [], children: [] }, { getDirectives: true });
@@ -121,12 +117,9 @@ const buildDirectiveForest = (
       } as DirectiveInstanceType;
     }),
     component: null,
-    children: []
+    children: [],
+    nativeElement: node
   };
-
-  if (options.includeNativeElement) {
-    current.nativeElement = node;
-  }
 
   if (cmp) {
     current.component = {
