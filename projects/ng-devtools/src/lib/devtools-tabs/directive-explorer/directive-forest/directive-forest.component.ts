@@ -40,6 +40,7 @@ export class DirectiveForestComponent {
       this._initialized = true;
     }
   }
+  @Input() highlightIDinTreeFromElement: ElementID | null = null;
 
   @Output() selectNode = new EventEmitter();
   @Output() highlightFromComponent = new EventEmitter<ElementID | null>();
@@ -52,7 +53,6 @@ export class DirectiveForestComponent {
   currentlyMatchedIndex = -1;
 
   selectedNode: FlatNode | null = null;
-  highlightedID: ElementID | null = null;
   treeControl = new FlatTreeControl<FlatNode>(
     node => node.level,
     node => node.expandable
@@ -238,6 +238,6 @@ export class DirectiveForestComponent {
   }
 
   isHighlighted(node: FlatNode): boolean {
-    return !!this.highlightedID && this.highlightedID.join(',') === node.id.join(',');
+    return !!this.highlightIDinTreeFromElement && this.highlightIDinTreeFromElement.join(',') === node.id.join(',');
   }
 }
