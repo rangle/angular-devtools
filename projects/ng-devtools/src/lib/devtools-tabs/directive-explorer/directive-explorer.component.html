@@ -1,7 +1,7 @@
 <ng-directive-forest
   (selectNode)="handleNodeSelection($event)"
   [forest]="forest"
-  [messageBus]="messageBus"
+  (highlightFromComponent)="handleHighlightFromComponent($event)"
 ></ng-directive-forest>
 <div *ngIf="currentSelectedElement" class="property-wrapper">
   <div *ngFor="let data of directivesData | keyvalue; trackBy: nameTracking" class="explorer-panel">

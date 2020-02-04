@@ -8,7 +8,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { Node } from 'protocol';
+import { Node, ElementID } from 'protocol';
 import { CdkTree, FlatTreeControl } from '@angular/cdk/tree';
 import { ComponentDataSource, FlatNode } from './component-data-source';
 
@@ -42,6 +42,7 @@ export class DirectiveForestComponent {
   }
 
   @Output() selectNode = new EventEmitter();
+  @Output() highlightFromComponent = new EventEmitter<ElementID | null>();
 
   @ViewChild(CdkTree) tree: CdkTree<any>;
 
@@ -51,6 +52,7 @@ export class DirectiveForestComponent {
   currentlyMatchedIndex = -1;
 
   selectedNode: FlatNode | null = null;
+  highlightedID: ElementID | null = null;
   treeControl = new FlatTreeControl<FlatNode>(
     node => node.level,
     node => node.expandable
@@ -226,5 +228,16 @@ export class DirectiveForestComponent {
       this.expandParents(parentNode);
     }
   }
-}
 
+  highlightNode(id: ElementID): void {
+    this.highlightFromComponent.emit(id);
+  }
+
+  removeHighlight(): void {
+    this.highlightFromComponent.emit();
+  }
+
+  isHighlighted(node: FlatNode): boolean {
+    return !!this.highlightedID && this.highlightedID.join(',') === node.id.join(',');
+  }
+}

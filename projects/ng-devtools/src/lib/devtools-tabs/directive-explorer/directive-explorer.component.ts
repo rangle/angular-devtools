@@ -6,7 +6,7 @@ import {
   DirectivesProperties,
   DirectiveID,
   ComponentExplorerViewQuery,
-  ComponentExplorerView, ComponentExplorerViewProperties,
+  ComponentExplorerView, ComponentExplorerViewProperties, ElementID,
 } from 'protocol';
 import { IndexedNode } from './directive-forest/index-forest';
 import { PropertyViewComponent } from './property-view/property-view.component';
@@ -102,6 +102,14 @@ export class DirectiveExplorerComponent implements OnInit {
       result[view.name] = view.getExpandedProperties();
     });
     return result;
+  }
+
+  handleHighlightFromComponent(id: ElementID | null) {
+    if(id){
+      this.messageBus.emit('highlightElementFromComponentTree', [id]);
+    } else {
+      this.messageBus.emit('removeHighlightFromElement');
+    }
   }
 }
 
