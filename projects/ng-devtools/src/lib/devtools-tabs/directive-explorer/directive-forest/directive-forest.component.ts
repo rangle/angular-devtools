@@ -23,7 +23,14 @@ import { FilterComponent } from './filter/filter.component';
   styleUrls: ['./directive-forest.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
-    trigger('simpleFade', [transition(':enter', [style({ opacity: 0 }), animate(75, style({ opacity: 1 }))]), transition(':leave', [animate(75, style({ opacity: 0 }))])])]
+    trigger('simpleFade', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate(75, style({ opacity: 1 }))
+      ]),
+      transition(':leave', [
+        animate(75, style({ opacity: 0 }))
+      ])])]
 })
 export class DirectiveForestComponent {
   @Input() set forest(forest: Node[]) {
