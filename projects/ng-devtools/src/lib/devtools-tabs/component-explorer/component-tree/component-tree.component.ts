@@ -5,6 +5,7 @@ import { FlatNode, ComponentDataSource } from './component-data-source';
 
 import scrollIntoViewIfNeeded from 'scroll-into-view-if-needed';
 import { isChildOf, parentCollapsed } from './component-tree-utils';
+import { IndexedNode } from './index-forest';
 
 @Component({
   selector: 'ng-component-tree',
@@ -12,6 +13,13 @@ import { isChildOf, parentCollapsed } from './component-tree-utils';
   styleUrls: ['./component-tree.component.css'],
 })
 export class ComponentTreeComponent {
+  @Input() set currentSelectedNode(node: IndexedNode) {
+    if (node) {
+      const selectedNode = this.dataSource.data.find((item) => item.id.toString() === node.id.toString());
+      this.select(selectedNode);
+    }
+  }
+
   @Input() set forest(forest: Node[]) {
     this.dataSource.update(forest);
     if (!this._initialized && forest && forest.length) {
@@ -36,7 +44,7 @@ export class ComponentTreeComponent {
 
   hasChild = (_: number, node: FlatNode) => node.expandable;
 
-  constructor(private _host: ElementRef) {}
+  constructor(private _host: ElementRef) { }
 
   select(node: FlatNode): void {
     this.selectNode.emit(node.original);

@@ -1,12 +1,17 @@
-<ng-component-tree (selectNode)="handleNodeSelection($event)" [forest]="forest"> </ng-component-tree>
-<div *ngIf="currentSelectedElement" class="property-wrapper">
-  <div *ngFor="let data of directivesData | keyvalue; trackBy: nameTracking" class="explorer-panel">
-    <header>Properties of {{ data.key }}</header>
-    <ng-property-view
-      [entityID]="getEntityID(data.key)"
-      [messageBus]="messageBus"
-      [name]="data.key"
-      [data]="data.value.props"
-    ></ng-property-view>
+<div class="outer-panel">
+  <div class="component-tree">
+    <ng-component-tree (selectNode)="handleNodeSelection($event)" [forest]="forest"
+      [currentSelectedNode]="currentSelectedElement"> </ng-component-tree>
+    <div *ngIf="currentSelectedElement" class="property-wrapper">
+      <div *ngFor="let data of directivesData | keyvalue; trackBy: nameTracking" class="explorer-panel">
+        <header>Properties of {{ data.key }}</header>
+        <ng-property-view [entityID]="getEntityID(data.key)" [messageBus]="messageBus" [name]="data.key"
+          [data]="data.value.props"></ng-property-view>
+      </div>
+    </div>
+  </div>
+  <div class="parent-nodes" *ngIf="parents">
+    <button *ngFor="let parent of parents"
+      (click)="handleNodeSelection(parent)">{{parent.component?.name || parent.element}}&nbsp;&nbsp;</button>
   </div>
 </div>

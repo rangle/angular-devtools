@@ -7,8 +7,9 @@ import {
   DirectiveID,
   ComponentExplorerViewQuery,
   ComponentExplorerView, ComponentExplorerViewProperties,
+  ElementID
 } from 'protocol';
-import { IndexedNode } from './component-tree/index-forest';
+import { IndexedNode, indexTree } from './component-tree/index-forest';
 import { PropertyViewComponent } from './property-view/property-view.component';
 
 @Component({
@@ -27,11 +28,25 @@ export class ComponentExplorerComponent implements OnInit {
   directivesData: DirectivesProperties | null = null;
   currentSelectedElement: IndexedNode;
   forest: Node[];
+  parents: IndexedNode[];
 
   handleNodeSelection(node: IndexedNode): void {
+    this.populateParents(node.id);
     this.currentSelectedElement = node;
     this.messageBus.emit('getElementDirectivesProperties', [node.id]);
     this.messageBus.emit('setSelectedComponent', [node.id]);
+  }
+
+  populateParents(id: ElementID): void {
+    this.parents = id.reduce((nodes: IndexedNode[], index: number) => {
+      if (nodes.length === 0) {
+        nodes.push(indexTree(this.forest[index], index));
+      } else {
+        const parentNode = nodes[nodes.length - 1];
+        nodes.push(indexTree(parentNode.children[index], index, parentNode.id));
+      }
+      return nodes;
+    }, []);
   }
 
   ngOnInit(): void {
@@ -78,7 +93,7 @@ export class ComponentExplorerComponent implements OnInit {
     return idx;
   }
 
-  nameTracking(_: number, item: {key: string}): string {
+  nameTracking(_: number, item: { key: string }): string {
     return item.key;
   }
 

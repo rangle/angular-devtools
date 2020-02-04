@@ -6,7 +6,7 @@ export interface IndexedNode extends Node {
   children: IndexedNode[];
 }
 
-const indexTree = (node: Node, idx: number, parentId = []): IndexedNode => {
+export const indexTree = (node: Node, idx: number, parentId = []): IndexedNode => {
   const id = parentId.concat([idx]);
   return {
     id,
