@@ -4,7 +4,7 @@ import {
   ElementRef,
   EventEmitter,
   HostListener,
-  Input, OnChanges,
+  Input,
   Output,
   ViewChild,
 } from '@angular/core';
@@ -15,6 +15,7 @@ import { ComponentDataSource, FlatNode } from './component-data-source';
 import scrollIntoViewIfNeeded from 'scroll-into-view-if-needed';
 import { isChildOf, parentCollapsed } from './directive-forest-utils';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { FilterComponent } from './filter/filter.component';
 
 @Component({
   selector: 'ng-directive-forest',
@@ -22,17 +23,8 @@ import { animate, style, transition, trigger } from '@angular/animations';
   styleUrls: ['./directive-forest.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
-    trigger('simpleFade', [
-      transition(':enter', [
-        style({ opacity: 0 }),
-        animate(75, style({ opacity: 1 }))
-      ]),
-      transition(':leave', [
-        animate(75, style({ opacity: 0 }))
-      ])])]
+    trigger('simpleFade', [transition(':enter', [style({ opacity: 0 }), animate(75, style({ opacity: 1 }))]), transition(':leave', [animate(75, style({ opacity: 0 }))])])]
 })
-
-
 export class DirectiveForestComponent {
   @Input() set forest(forest: Node[]) {
     this.dataSource.update(forest);
@@ -46,7 +38,7 @@ export class DirectiveForestComponent {
 
   @ViewChild(CdkTree) tree: CdkTree<any>;
 
-  @ViewChild('filterInput') filterElement: ElementRef;
+  @ViewChild(FilterComponent) filterComponent;
 
   filterRegex = new RegExp('.^');
   currentlyMatchedIndex = -1;
@@ -156,7 +148,7 @@ export class DirectiveForestComponent {
   }
 
   invalidArrowEvent(event: KeyboardEvent): boolean {
-    return event.target === this.filterElement.nativeElement || !this.selectedNode;
+    return event.target === this.filterComponent.filterElement.nativeElement || !this.selectedNode;
   }
 
   isSelected(node: FlatNode): boolean {
@@ -164,14 +156,21 @@ export class DirectiveForestComponent {
   }
 
   isMatched(node: FlatNode): boolean {
-    return this.filterRegex.test(node.name) || this.filterRegex.test(node.directives);
+    return this.filterRegex.test(node.name.toLowerCase()) || this.filterRegex.test(node.directives.toLowerCase());
   }
 
-  filter(event): void {
-    const filterText = event.target.value;
+  handleFilter(filterText: string): void {
+    this.resetCurrentlyMatchedIndex();
+    this.setFilterRegex(filterText);
+  }
+
+  resetCurrentlyMatchedIndex(): void {
     this.currentlyMatchedIndex = -1;
+  }
+
+  setFilterRegex(filterText: string): void {
     try {
-      this.filterRegex = new RegExp(filterText || '.^');
+      this.filterRegex = new RegExp(filterText.toLowerCase() || '.^');
     } catch {
       this.filterRegex = new RegExp('.^');
     }
@@ -179,6 +178,10 @@ export class DirectiveForestComponent {
 
   _findMatchedNodes(): FlatNode[] {
     return this.dataSource.data.filter(node => this.isMatched(node));
+  }
+
+  hasMatched(): boolean {
+  return this._findMatchedNodes().length > 0;
   }
 
   nextMatched(): void {

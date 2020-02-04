@@ -16,23 +16,13 @@
 }
 
 .initializing .loading {
-  background: #D32F2F;
+  background: url("./images/angular.svg");
   border-radius: 50%;
   width: 125px;
   height: 125px;
   float: left;
   text-align: center;
   animation: pulse 1s infinite;
-}
-
-.initializing .loading .loading-text {
-  color: #fff;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  line-height: 1.5;
-  position: relative;
-  top: 25%;
-  font-size: 18px;
 }
 
 @keyframes pulse

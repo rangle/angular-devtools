@@ -87,3 +87,8 @@
   line-height: 1.4em;
   padding: 12px 6px;
 }
+
+.up-down-buttons {
+  width: 20%;
+  display: flex;
+}
