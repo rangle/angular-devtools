@@ -171,6 +171,6 @@ const findElementIDFromNativeElementInForest = (forest: IndexedNode[], nativeEle
     if(component.children.length) {
       return findElementIDFromNativeElementInForest(component.children, nativeElement);
     }
-    return null;
   }
+  return null;
 };

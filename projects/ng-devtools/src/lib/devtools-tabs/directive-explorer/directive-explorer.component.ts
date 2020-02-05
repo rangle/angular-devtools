@@ -111,12 +111,12 @@ export class DirectiveExplorerComponent implements OnInit {
     return result;
   }
 
-  handleHighlightFromComponent(id: ElementID | null) {
-    if(id){
-      this.messageBus.emit('highlightElementFromComponentTree', [id]);
-    } else {
-      this.messageBus.emit('removeHighlightFromElement');
-    }
+  handleHighlightFromComponent(id: ElementID) {
+    this.messageBus.emit('highlightElementFromComponentTree', [id]);
+  }
+
+  handleUnhighlightFromComponent(id: ElementID | null) {
+    this.messageBus.emit('removeHighlightFromElement');
   }
 }
 

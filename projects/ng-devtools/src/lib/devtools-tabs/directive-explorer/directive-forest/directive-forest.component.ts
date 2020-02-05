@@ -43,7 +43,8 @@ export class DirectiveForestComponent {
   @Input() highlightIDinTreeFromElement: ElementID | null = null;
 
   @Output() selectNode = new EventEmitter();
-  @Output() highlightFromComponent = new EventEmitter<ElementID | null>();
+  @Output() highlightFromComponent = new EventEmitter<ElementID>();
+  @Output() unhighlightFromComponent = new EventEmitter<null>();
 
   @ViewChild(CdkTree) tree: CdkTree<any>;
 
@@ -249,7 +250,7 @@ export class DirectiveForestComponent {
   }
 
   removeHighlight(): void {
-    this.highlightFromComponent.emit();
+    this.unhighlightFromComponent.emit();
   }
 
   isHighlighted(node: FlatNode): boolean {
