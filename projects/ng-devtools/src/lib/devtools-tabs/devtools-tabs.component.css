@@ -9,18 +9,20 @@ mat-tab-group {
   display: block;
 }
 
-#inspect-component,
-#refresh-component-tree {
+#inspect-component {
   position: absolute;
-  top: 8px;
+  top: 5px;
   left: 4px;
   border: 0;
   outline: none;
 }
 
 #refresh-component-tree {
-  left: 40px;
-  top: 8px;
+  position: absolute;
+  left: 35px;
+  top: 7px;
+  border: 0;
+  outline: none;
 }
 
 #inspect-component,
@@ -46,7 +48,7 @@ mat-tab-group {
 
 #app-angular-version {
   position: absolute;
-  top: 5px;
+  top: 8px;
   right: 10px;
   font-size: 11px;
   font-weight: bold;
