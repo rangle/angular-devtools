@@ -158,18 +158,19 @@ export const findNodeInForest = (id: ElementID, forest: ComponentTreeNode[]): HT
 };
 
 export const getIndexForNativeElementInForest = (nativeElement: HTMLElement, forest: IndexedNode[]): ElementID | null => {
-  let foundElementId: ElementID = findNativeElementInForest(forest, nativeElement);
+  let foundElementId: ElementID = findElementIDFromNativeElementInForest(forest, nativeElement);
   return foundElementId || null;
 }
 
-const findNativeElementInForest = (forest: IndexedNode[], nativeElement: HTMLElement): ElementID | null => {
+const findElementIDFromNativeElementInForest = (forest: IndexedNode[], nativeElement: HTMLElement): ElementID | null => {
   for(let i = 0; i < forest.length; i++) {
     const component = forest[i];
     if(component.nativeElement === nativeElement) {
       return component.id;
     }
     if(component.children.length) {
-      return findNativeElementInForest(component.children, nativeElement);
+      return findElementIDFromNativeElementInForest(component.children, nativeElement);
     }
+    return null;
   }
 };
