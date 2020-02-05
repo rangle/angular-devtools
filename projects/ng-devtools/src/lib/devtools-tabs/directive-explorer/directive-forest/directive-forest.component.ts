@@ -53,6 +53,8 @@ export class DirectiveForestComponent {
   currentlyMatchedIndex = -1;
 
   selectedNode: FlatNode | null = null;
+  parents: FlatNode[];
+
   treeControl = new FlatTreeControl<FlatNode>(
     node => node.level,
     node => node.expandable
@@ -63,15 +65,16 @@ export class DirectiveForestComponent {
 
   hasChild = (_: number, node: FlatNode) => node.expandable;
 
-  constructor(private _host: ElementRef) {}
+  constructor(private _host: ElementRef) { }
 
   handleSelect(node: FlatNode): void {
     const matchedTree: FlatNode[] = this._findMatchedNodes();
-    this.currentlyMatchedIndex = matchedTree.findIndex(matchedNode =>  matchedNode.id === node.id);
+    this.currentlyMatchedIndex = matchedTree.findIndex(matchedNode => matchedNode.id === node.id);
     this.select(node);
   }
 
   select(node: FlatNode): void {
+    this.populateParents(node.id);
     this.selectNode.emit(node.original);
     this.selectedNode = node;
 
@@ -87,6 +90,18 @@ export class DirectiveForestComponent {
         inline: 'nearest',
       });
     }, 0);
+  }
+
+  populateParents(id: ElementID): void {
+    this.parents = id.reduce((nodes: FlatNode[], index: number) => {
+      let nodeId = [index];
+      if (nodes.length > 0) {
+        nodeId = nodes[nodes.length - 1].id.concat(index);
+      }
+      const selectedNode = this.dataSource.data.find((item) => item.id.toString() === nodeId.toString());
+      nodes.push(selectedNode);
+      return nodes;
+    }, []);
   }
 
   @HostListener('document:keydown.ArrowUp', ['$event'])
@@ -190,7 +205,7 @@ export class DirectiveForestComponent {
   }
 
   hasMatched(): boolean {
-  return this._findMatchedNodes().length > 0;
+    return this._findMatchedNodes().length > 0;
   }
 
   nextMatched(): void {

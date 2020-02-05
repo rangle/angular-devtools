@@ -13,7 +13,7 @@ import { ComponentInspector } from './component-inspector';
 import { setConsoleReference } from './selected-component';
 import { unHighlight } from './highlighter';
 
-const inspector: ComponentInspector = new ComponentInspector();
+const inspector = new ComponentInspector();
 
 const stopInspecting = () => inspector.stopInspecting();
 

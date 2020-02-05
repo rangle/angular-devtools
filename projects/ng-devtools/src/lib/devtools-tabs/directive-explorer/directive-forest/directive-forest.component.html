@@ -1,9 +1,5 @@
-<ng-filter
-  [hasMatched]="hasMatched()"
-  (filter)="handleFilter($event)"
-  (nextMatched)="nextMatched()"
-  (prevMatched)="prevMatched()"
->
+<ng-filter [hasMatched]="hasMatched()" (filter)="handleFilter($event)" (nextMatched)="nextMatched()"
+  (prevMatched)="prevMatched()">
 </ng-filter>
 <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
   <mat-tree-node
@@ -39,3 +35,8 @@
     <span *ngIf="node.directives" class="dir-names">[{{ node.directives }}]</span>
   </mat-tree-node>
 </mat-tree>
+<div class="parent-nodes" *ngIf="parents">
+  <button mat-button class="btn-node" *ngFor="let node of parents" (click)="handleSelect(node)">
+    {{node.original.component?.name || node.original.element}}
+  </button>
+</div>
