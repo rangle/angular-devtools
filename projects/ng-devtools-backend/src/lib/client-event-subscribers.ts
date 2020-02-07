@@ -9,13 +9,9 @@ import {
 } from './component-tree';
 import { start as startProfiling, stop as stopProfiling } from './recording';
 import { serializeComponentState } from './state-serializer';
-import { ComponentInspector } from './component-inspector';
+import { ComponentInspector, ComponentInspectorOptions } from './component-inspector';
 import { setConsoleReference } from './selected-component';
 import { unHighlight } from './highlighter';
-
-const inspector = new ComponentInspector();
-
-const stopInspecting = () => inspector.stopInspecting();
 
 export const subscribeToClientEvents = (messageBus: MessageBus<Events>): void => {
   onChangeDetection(() => messageBus.emit('componentTreeDirty'));
@@ -27,18 +23,13 @@ export const subscribeToClientEvents = (messageBus: MessageBus<Events>): void =>
   messageBus.on('startProfiling', startProfiling);
   messageBus.on('stopProfiling', stopProfilingCallback(messageBus));
 
-  messageBus.on('inspectorStart', startInspectingCallback(messageBus));
-  messageBus.on('inspectorEnd', stopInspecting);
-
   messageBus.on('getElementDirectivesProperties', getElementDirectivesPropertiesCallback(messageBus));
 
   messageBus.on('setSelectedComponent', selectedComponentCallback);
 
   messageBus.on('getNestedProperties', getNestedPropertiesCallback(messageBus));
 
-  messageBus.on('highlightElementFromComponentTree', highlightElementFromComponentTreeCallback);
-
-  messageBus.on('removeHighlightFromElement', unHighlight);
+  setupInspector(messageBus);
 };
 
 //
@@ -55,10 +46,6 @@ const getLatestComponentExplorerViewCallback = (messageBus: MessageBus<Events>) 
 };
 
 const checkForAngularCallback = (messageBus: MessageBus<Events>) => () => checkForAngular(messageBus);
-
-const startInspectingCallback = (messageBus: MessageBus<Events>) => () => {
-  inspector.startInspecting(messageBus);
-};
 
 const stopProfilingCallback = (messageBus: MessageBus<Events>) => () => {
   messageBus.emit('profilerResults', [stopProfiling()]);
@@ -93,8 +80,6 @@ const getNestedPropertiesCallback = (messageBus: MessageBus<Events>) => (id: Dir
     messageBus.emit('nestedProperties', [id, { props: {} }, propPath]);
   }
 };
-
-const highlightElementFromComponentTreeCallback = (id: ElementID) => { inspector.highlightById(id); };
 
 //
 // Subscribe Helpers
@@ -137,4 +122,24 @@ const serializeNodeDirectiveProperties = (node: ComponentTreeNode): DirectivesPr
     };
   }
   return result;
+};
+
+const setupInspector = (messageBus: MessageBus<Events>) => {
+  const onComponentEnter = (id: ElementID) => {
+    messageBus.emit('highlightComponentInTreeFromElement', [id]);
+  };
+  const onComponentLeave = () => {
+    messageBus.emit('removeHighlightFromComponentTree');
+  };
+
+  const inspectorOptions: ComponentInspectorOptions = { onComponentEnter, onComponentLeave };
+  const inspector = new ComponentInspector(inspectorOptions);
+
+  messageBus.on('inspectorStart', inspector.startInspecting);
+  messageBus.on('inspectorEnd', inspector.stopInspecting);
+
+  messageBus.on('highlightElementFromComponentTree', (id: ElementID) => {
+    inspector.highlightById(id);
+  });
+  messageBus.on('removeHighlightFromElement', unHighlight);
 };

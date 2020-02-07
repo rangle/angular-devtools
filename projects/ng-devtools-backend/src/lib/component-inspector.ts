@@ -6,19 +6,28 @@ import {
   findNodeInForest,
   getIndexForNativeElementInForest,
 } from './component-tree';
-import { ElementID, MessageBus, Events } from 'protocol';
+import { ElementID } from 'protocol';
 import { indexForest, IndexedNode } from './recording/observer';
+
+export interface ComponentInspectorOptions {
+  onComponentEnter: (id: ElementID) => void;
+  onComponentLeave: () => void;
+}
 
 export class ComponentInspector {
   private _selectedComponent: { component: Type<unknown>; host: HTMLElement };
-  private _messageBus: MessageBus<Events>;
+  private _onComponentEnter;
+  private _onComponentLeave;
 
-  constructor() {
+  constructor(
+    componentOptions: ComponentInspectorOptions = { onComponentEnter: () => {}, onComponentLeave: () => {} }
+  ) {
     this.bindMethods();
+    this._onComponentEnter = componentOptions.onComponentEnter;
+    this._onComponentLeave = componentOptions.onComponentLeave;
   }
 
-  startInspecting(messageBus: MessageBus<Events>): void {
-    this._messageBus = messageBus;
+  startInspecting(): void {
     window.addEventListener('mouseover', this.elementMouseOver, true);
     window.addEventListener('mouseout', this.cancelEvent, true);
     window.addEventListener('mouseenter', this.cancelEvent, true);
@@ -39,7 +48,6 @@ export class ComponentInspector {
     window.removeEventListener('mouseup', this.cancelEvent, true);
 
     unHighlight();
-    this._messageBus = null;
   }
 
   elementMouseOver(e: MouseEvent): void {
@@ -55,14 +63,14 @@ export class ComponentInspector {
       highlight(this._selectedComponent.host);
       const forest: IndexedNode[] = indexForest(getDirectiveForest());
       const elementId: ElementID = getIndexForNativeElementInForest(this._selectedComponent.host, forest);
-      this._messageBus.emit('highlightComponentInTreeFromElement', [elementId]);
+      this._onComponentEnter(elementId);
     }
   }
 
   cancelEvent(e: MouseEvent): void {
     e.stopImmediatePropagation();
     e.preventDefault();
-    this._messageBus.emit('removeHighlightFromComponentTree');
+    this._onComponentLeave();
   }
 
   bindMethods(): void {
