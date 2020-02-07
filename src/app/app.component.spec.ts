@@ -6,10 +6,8 @@ import { AppComponent } from './app.component';
 describe('AppComponent (Demo Todo App)', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        AppComponent
-      ],
-      imports: [RouterTestingModule]
+      declarations: [AppComponent],
+      imports: [RouterTestingModule],
     }).compileComponents();
   }));
 

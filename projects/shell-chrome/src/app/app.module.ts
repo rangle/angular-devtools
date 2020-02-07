@@ -5,13 +5,8 @@ import { DevToolsModule } from 'ng-devtools';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserAnimationsModule,
-    DevToolsModule
-  ],
-  bootstrap: [AppComponent]
+  declarations: [AppComponent],
+  imports: [BrowserAnimationsModule, DevToolsModule],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
