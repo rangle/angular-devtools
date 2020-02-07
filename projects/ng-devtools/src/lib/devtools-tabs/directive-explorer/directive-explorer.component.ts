@@ -12,6 +12,7 @@ import {
 } from 'protocol';
 import { IndexedNode } from './directive-forest/index-forest';
 import { PropertyViewComponent } from './property-view/property-view.component';
+import { ApplicationOperations } from '../../application-operations';
 
 @Component({
   selector: 'ng-directive-explorer',
@@ -31,11 +32,7 @@ export class DirectiveExplorerComponent implements OnInit {
   forest: Node[];
   highlightIDinTreeFromElement: ElementID | null = null;
 
-  handleNodeSelection(node: IndexedNode): void {
-    this.currentSelectedElement = node;
-    this.messageBus.emit('getElementDirectivesProperties', [node.id]);
-    this.messageBus.emit('setSelectedComponent', [node.id]);
-  }
+  constructor(private _appOperations: ApplicationOperations) {}
 
   ngOnInit(): void {
     this.subscribeToBackendEvents();
@@ -53,6 +50,12 @@ export class DirectiveExplorerComponent implements OnInit {
       }, 50);
     });
     this.refresh();
+  }
+
+  handleNodeSelection(node: IndexedNode): void {
+    this.currentSelectedElement = node;
+    this.messageBus.emit('getElementDirectivesProperties', [node.id]);
+    this.messageBus.emit('setSelectedComponent', [node.id]);
   }
 
   subscribeToBackendEvents(): void {
@@ -89,6 +92,10 @@ export class DirectiveExplorerComponent implements OnInit {
 
   nameTracking(_: number, item: { key: string }): string {
     return item.key;
+  }
+
+  viewSource(): void {
+    this._appOperations.viewSource(this.currentSelectedElement.id);
   }
 
   private _constructViewQuery(): ComponentExplorerViewQuery {
