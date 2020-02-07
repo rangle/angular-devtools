@@ -1,8 +1,6 @@
 import { ComponentInspector } from './component-inspector';
 
 describe('ComponentInspector', () => {
-  const messageBusMock = jasmine.createSpyObj('messageBus', ['on', 'once', 'emit', 'destroy']);
-
   it('should create instance from class', () => {
     const inspector = new ComponentInspector();
     expect(inspector).toBeTruthy();
@@ -11,8 +9,8 @@ describe('ComponentInspector', () => {
   it('should add event listeners to window on start inspecting', () => {
     const eventsSpy = spyOn(window, 'addEventListener');
     const inspector = new ComponentInspector();
-    inspector.startInspecting(messageBusMock);
-    expect(eventsSpy).toHaveBeenCalledTimes(6)
+    inspector.startInspecting();
+    expect(eventsSpy).toHaveBeenCalledTimes(6);
     expect(eventsSpy).toHaveBeenCalledWith('mouseover', jasmine.any(Function), true);
     expect(eventsSpy).toHaveBeenCalledWith('mouseout', jasmine.any(Function), true);
     expect(eventsSpy).toHaveBeenCalledWith('mouseenter', jasmine.any(Function), true);
@@ -25,7 +23,7 @@ describe('ComponentInspector', () => {
     const eventsSpy = spyOn(window, 'removeEventListener');
     const inspector = new ComponentInspector();
     inspector.stopInspecting();
-    expect(eventsSpy).toHaveBeenCalledTimes(6)
+    expect(eventsSpy).toHaveBeenCalledTimes(6);
     expect(eventsSpy).toHaveBeenCalledWith('mouseover', jasmine.any(Function), true);
     expect(eventsSpy).toHaveBeenCalledWith('mouseout', jasmine.any(Function), true);
     expect(eventsSpy).toHaveBeenCalledWith('mouseenter', jasmine.any(Function), true);
@@ -37,7 +35,7 @@ describe('ComponentInspector', () => {
   it('should cancel events from mouse after start inspecting', () => {
     const inspector = new ComponentInspector();
     const mouseEventSpy = jasmine.createSpyObj('e', ['stopImmediatePropagation', 'preventDefault']);
-    inspector.startInspecting(messageBusMock);
+    inspector.startInspecting();
     inspector.cancelEvent(mouseEventSpy);
     expect(mouseEventSpy.stopImmediatePropagation).toHaveBeenCalledTimes(1);
     expect(mouseEventSpy.preventDefault).toHaveBeenCalledTimes(1);
