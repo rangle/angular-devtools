@@ -94,6 +94,12 @@ export class DirectiveForestComponent {
     }, 0);
   }
 
+  clearSelectedNode(): void {
+    this.selectNode.emit(null);
+    this.selectedNode = null;
+    this.parents = [];
+  }
+
   populateParents(position: ElementPosition): void {
     this.parents = position.reduce((nodes: FlatNode[], index: number) => {
       let nodeId = [index];

@@ -65,13 +65,20 @@ export interface ComponentExplorerViewProperties {
 }
 
 export interface ComponentExplorerViewQuery {
-  selectedElement: ElementPosition | null;
+  selectedElement: ComponentExplorerViewQuerySelectedComponentProperties | null;
   expandedProperties: ComponentExplorerViewProperties;
+}
+
+export interface ComponentExplorerViewQuerySelectedComponentProperties {
+  position: ElementPosition;
+  componentId: number;
+  directiveIds: number[];
 }
 
 export interface ComponentExplorerView {
   forest: DevToolsNode[];
   properties: DirectivesProperties;
+  sameNode?: boolean;
 }
 
 export enum DirectiveEventType {

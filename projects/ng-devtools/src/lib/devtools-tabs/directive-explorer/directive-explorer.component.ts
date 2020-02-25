@@ -14,6 +14,7 @@ import { IndexedNode } from './directive-forest/index-forest';
 import { ApplicationOperations } from '../../application-operations';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PropertyTabComponent } from './property-tab/property-tab.component';
+import { DirectiveForestComponent } from './directive-forest/directive-forest.component';
 
 @Component({
   selector: 'ng-directive-explorer',
@@ -24,6 +25,7 @@ export class DirectiveExplorerComponent implements OnInit {
   @Input() messageBus: MessageBus<Events>;
 
   @ViewChild(PropertyTabComponent) propertyTab: PropertyTabComponent;
+  @ViewChild(DirectiveForestComponent) directiveForest: DirectiveForestComponent;
 
   // The original data we pass to the property viewer.
   // Later, the property viewer may request more nested properties
@@ -37,6 +39,33 @@ export class DirectiveExplorerComponent implements OnInit {
 
   ngOnInit(): void {
     this.subscribeToBackendEvents();
+  }
+
+  handleNodeSelection(node: IndexedNode): void {
+    this.currentSelectedElement = node;
+    if (this.currentSelectedElement) {
+      this.messageBus.emit('getElementDirectivesProperties', [node.position]);
+      this.messageBus.emit('setSelectedComponent', [node.position]);
+    }
+  }
+
+  subscribeToBackendEvents(): void {
+    this.messageBus.on('elementDirectivesProperties', (data: DirectivesProperties) => {
+      this.directivesData = data;
+    });
+    this.messageBus.on('latestComponentExplorerView', (view: ComponentExplorerView) => {
+      this.forest = view.forest;
+      if (!view.sameNode) {
+        this.directiveForest.clearSelectedNode();
+      }
+      this.directivesData = view.properties;
+    });
+    this.messageBus.on('highlightComponentInTreeFromElement', (position: ElementPosition) => {
+      this.highlightIDinTreeFromElement = position;
+    });
+    this.messageBus.on('removeHighlightFromComponentTree', () => {
+      this.highlightIDinTreeFromElement = null;
+    });
 
     // Only one refresh per 50ms.
     let buffering = false;
@@ -51,28 +80,6 @@ export class DirectiveExplorerComponent implements OnInit {
       }, 50);
     });
     this.refresh();
-  }
-
-  handleNodeSelection(node: IndexedNode): void {
-    this.currentSelectedElement = node;
-    this.messageBus.emit('getElementDirectivesProperties', [node.position]);
-    this.messageBus.emit('setSelectedComponent', [node.position]);
-  }
-
-  subscribeToBackendEvents(): void {
-    this.messageBus.on('elementDirectivesProperties', (data: DirectivesProperties) => {
-      this.directivesData = data;
-    });
-    this.messageBus.on('latestComponentExplorerView', (view: ComponentExplorerView) => {
-      this.forest = view.forest;
-      this.directivesData = view.properties;
-    });
-    this.messageBus.on('highlightComponentInTreeFromElement', (position: ElementPosition) => {
-      this.highlightIDinTreeFromElement = position;
-    });
-    this.messageBus.on('removeHighlightFromComponentTree', () => {
-      this.highlightIDinTreeFromElement = null;
-    });
   }
 
   refresh(): void {
@@ -91,8 +98,13 @@ export class DirectiveExplorerComponent implements OnInit {
     if (!this.currentSelectedElement) {
       return { selectedElement: null, expandedProperties: null };
     }
+
     return {
-      selectedElement: this.currentSelectedElement.position,
+      selectedElement: {
+        position: this.currentSelectedElement.position,
+        componentId: this.currentSelectedElement.component ? this.currentSelectedElement.component.id : null,
+        directiveIds: this.currentSelectedElement.directives.map(dir => dir.id),
+      },
       // We get the latest query for the properties.
       // The directive may have extended the properties
       // with nested ones which were dynamically requested

@@ -8,9 +8,17 @@ import {
   DirectiveType,
   ComponentType,
   ProfilerFrame,
+  ComponentExplorerViewQuery,
 } from 'protocol';
 import { onChangeDetection } from './change-detection-tracker';
-import { ComponentTreeNode, getDirectiveForest, getLatestComponentState, queryComponentForest } from './component-tree';
+import {
+  arrayEquals,
+  ComponentTreeNode,
+  getDirectiveForest,
+  getLatestComponentState,
+  queryComponentForest,
+  traverseTreeFromRoot,
+} from './component-tree';
 import { start as startProfiling, stop as stopProfiling } from './observer';
 import { serializeComponentState } from './state-serializer/state-serializer';
 import { ComponentInspector, ComponentInspectorOptions } from './component-inspector/component-inspector';
@@ -64,10 +72,13 @@ const initChangeDetection = (messageBus: MessageBus<Events>) => {
 //
 
 const getLatestComponentExplorerViewCallback = (messageBus: MessageBus<Events>) => query => {
+  const forest = prepareForestForSerialization(getDirectiveForest(document.documentElement, ngDebug));
+  const sameNode = sameNodeIsSelectedAfterChangeDetection(forest, query);
   messageBus.emit('latestComponentExplorerView', [
     {
-      forest: prepareForestForSerialization(getDirectiveForest(document.documentElement, ngDebug)),
+      forest,
       properties: getLatestComponentState(query),
+      sameNode,
     },
   ]);
 };
@@ -202,4 +213,26 @@ export const prepareForestForSerialization = (roots: ComponentTreeNode[]): Seria
       children: prepareForestForSerialization(node.children),
     } as SerializableComponentTreeNode;
   });
+};
+
+const sameNodeIsSelectedAfterChangeDetection = (
+  newForest: SerializableComponentTreeNode[],
+  query: ComponentExplorerViewQuery
+) => {
+  const { selectedElement } = query;
+  let sameNode = false;
+  if (selectedElement) {
+    const rootIndex = selectedElement.position[0];
+    const traversalPath = selectedElement.position.slice(1);
+    const traversed = traverseTreeFromRoot(newForest[rootIndex], traversalPath);
+    if (traversed.component) {
+      sameNode = traversed.component.id === selectedElement.componentId;
+    } else {
+      sameNode = arrayEquals(
+        traversed.directives.map(dir => dir.id),
+        selectedElement.directiveIds
+      );
+    }
+  }
+  return sameNode;
 };

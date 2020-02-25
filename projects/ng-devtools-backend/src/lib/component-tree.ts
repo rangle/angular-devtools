@@ -4,6 +4,7 @@ import { DevToolsNode, ElementPosition, ComponentExplorerViewQuery, DirectivesPr
 import { getComponentName } from './highlighter';
 import { DebuggingAPI } from './interfaces';
 import { IndexedNode } from './observer/identity-tracker';
+import { SerializableComponentTreeNode } from './client-event-subscribers';
 
 export interface DirectiveInstanceType {
   instance: any;
@@ -21,9 +22,9 @@ export interface ComponentTreeNode extends DevToolsNode<DirectiveInstanceType, C
 
 export const getLatestComponentState = (query: ComponentExplorerViewQuery): DirectivesProperties | undefined => {
   let result: DirectivesProperties | undefined;
-  if (query.selectedElement && query.expandedProperties) {
+  if (query.selectedElement && query.selectedElement.position && query.expandedProperties) {
     const node = queryComponentForest(
-      query.selectedElement,
+      query.selectedElement.position,
       getDirectiveForest(document.documentElement, (window as any).ng)
     );
     if (!node) {
@@ -161,4 +162,39 @@ const findElementIDFromNativeElementInForest = (
 export const findNodeFromSerializedPosition = (serializedPosition: string) => {
   const position: number[] = serializedPosition.split(',').map(index => parseInt(index, 10));
   return queryComponentForest(position, getDirectiveForest(document.documentElement, (window as any).ng));
+};
+
+export const traverseTreeFromRoot = (root: SerializableComponentTreeNode, position: ElementPosition) => {
+  let node = root;
+  try {
+    for (const index of position) {
+      node = node.children[index];
+    }
+  } catch {
+    node = null;
+  }
+  return node;
+};
+
+// works with arrays of string, numbers and booleans
+export const arrayEquals = (a, b) => {
+  if (a.length !== b.length) {
+    return false;
+  }
+  if (a.length === 0) {
+    return b.length === 0;
+  }
+  if (typeof a[0] !== typeof b[0]) {
+    return false;
+  }
+
+  let equal;
+  for (let i = 0; i < a.length; i++) {
+    if (i === 0) {
+      equal = a[i] === b[i];
+    } else {
+      equal = a[i] === b[i] && equal;
+    }
+  }
+  return equal;
 };

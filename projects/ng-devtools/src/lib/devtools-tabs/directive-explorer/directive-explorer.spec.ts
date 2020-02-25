@@ -24,7 +24,7 @@ describe('DirectiveExplorerComponent', () => {
 
   it('subscribe to backend events', () => {
     comp.subscribeToBackendEvents();
-    expect(comp.messageBus.on).toHaveBeenCalledTimes(4);
+    expect(comp.messageBus.on).toHaveBeenCalledTimes(5);
     expect(comp.messageBus.on).toHaveBeenCalledWith('elementDirectivesProperties', jasmine.any(Function));
     expect(comp.messageBus.on).toHaveBeenCalledWith('latestComponentExplorerView', jasmine.any(Function));
     expect(comp.messageBus.on).toHaveBeenCalledWith('highlightComponentInTreeFromElement', jasmine.any(Function));
@@ -44,7 +44,13 @@ describe('DirectiveExplorerComponent', () => {
     });
 
     it('should emit getLatestComponentExplorerView event on refresh with view query no properties', () => {
-      const currentSelectedElement = jasmine.createSpyObj('currentSelectedElement', ['position', 'children']);
+      const currentSelectedElement = {
+        element: null,
+        position: [],
+        children: [],
+        component: jasmine.createSpyObj('component', ['id']),
+        directives: [],
+      };
       currentSelectedElement.position = [0];
       currentSelectedElement.children = [];
       comp.currentSelectedElement = currentSelectedElement;
@@ -56,8 +62,13 @@ describe('DirectiveExplorerComponent', () => {
       comp.propertyTab = propertyTab as any;
       (comp.propertyViews.toArray as Spy).and.returnValue([]);
       comp.refresh();
+
       const viewQuery: ComponentExplorerViewQuery = {
-        selectedElement: comp.currentSelectedElement.position,
+        selectedElement: {
+          position: comp.currentSelectedElement.position,
+          componentId: comp.currentSelectedElement.component ? comp.currentSelectedElement.component.id : null,
+          directiveIds: comp.currentSelectedElement.directives.map(dir => dir.id),
+        },
         expandedProperties: {},
       };
       expect(comp.messageBus.emit).toHaveBeenCalledWith('getLatestComponentExplorerView', [viewQuery]);
