@@ -171,7 +171,7 @@ export class ComponentTreeObserver {
     if (component) {
       componentAccumulator.push(component);
     } else {
-      Array.from(node.children).forEach(child =>
+      Array.from(node.children || []).forEach(child =>
         this._getAllNestedComponentsWithinDomNode(child, componentAccumulator)
       );
     }
@@ -185,9 +185,10 @@ export class ComponentTreeObserver {
       directives = ng.getDirectives(node);
     } catch {}
 
-    Array.from(node.children).forEach(
+    Array.from(node.children || []).forEach(
       child => (directives = directives.concat(this._getAllNestedDirectivesWithinDomNode(child)))
     );
+
     return directives;
   }
 
