@@ -16,6 +16,13 @@
   font-weight: 500;
 }
 
+.graph-container {
+  background-color: #ddd;
+  height: 50px;
+  justify-content: center;
+  display: flex;
+}
+
 .warning-no {
   color: green;
 }

@@ -13,7 +13,7 @@
 <ng-template let-record="record" let-showControls="showControls" #recordView>
   <div class="controls">
     <button mat-stroked-button (click)="exportProfile.emit()">Export to JSON</button>
-    <ng-container *ngIf="showControls">
+    <!-- <ng-container *ngIf="showControls">
       <mat-slider
         [max]="profileRecords.timeline.length - 1"
         [min]="1"
@@ -23,8 +23,7 @@
       &nbsp;
       <button mat-stroked-button (click)="move(-1)"><</button>
       <button mat-stroked-button (click)="move(1)">></button>
-    </ng-container>
-
+    </ng-container>-->
     <label
       [class.warning-no]="record.timeSpent < 16"
       [class.warning-low]="record.timeSpent >= 16"
@@ -33,7 +32,6 @@
     >
       Time spent: {{ record.timeSpent | number }} ms
     </label>
-
     <label
       [class.warning-no]="record.timeSpent < 16"
       [class.warning-low]="record.timeSpent >= 16"
@@ -44,6 +42,15 @@
       Frame rate: {{ frameRate(record.timeSpent) }} fps
     </label>
     <label *ngIf="record.source">Source: {{ record.source }}</label>
+  </div>
+  <div class="graph-container">
+    <ngx-charts-bar-horizontal-normalized
+      [view]="view"
+      [scheme]="colorScheme"
+      [results]="graphData"
+      (select)="selectFrame($event)"
+    >
+    </ngx-charts-bar-horizontal-normalized>
   </div>
   <ng-recording-visualizer [bars]="record.app"></ng-recording-visualizer>
 </ng-template>

@@ -12,6 +12,7 @@ import { ProfilerFrame } from 'protocol';
 export class TimelineComponent {
   @Input() set records(data: ProfilerFrame[]) {
     this.profileRecords = formatFlamegraphRecords(data);
+    this.renderGraph(this.profileRecords.timeline);
   }
 
   @Output() exportProfile = new EventEmitter<void>();
@@ -22,6 +23,12 @@ export class TimelineComponent {
     timeline: [],
   };
   currentView = 1;
+
+  view: any[] = [500, 50];
+  colorScheme = {
+    domain: ['#E71D36', '#2EC4B6', '#FF9F1C', '#011627'],
+  };
+  graphData = [];
 
   get recordsView(): AppEntry {
     return this.profileRecords.timeline[this.currentView] || { app: [], timeSpent: 0, source: '' };
@@ -46,5 +53,23 @@ export class TimelineComponent {
       this.currentView = newVal;
       this.slider.value = this.currentView;
     }
+  }
+
+  renderGraph(timeline: AppEntry[]): void {
+    const series = timeline.map((node, index) => ({
+      name: node.source,
+      value: +node.timeSpent.toFixed(2) * 10,
+      index,
+    }));
+    this.graphData = [
+      {
+        name: 'Profiler Timeline',
+        series,
+      },
+    ];
+  }
+
+  selectFrame(data: any): void {
+    this.currentView = data.index;
   }
 }
