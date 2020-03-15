@@ -13,11 +13,25 @@
   <header>{{ selectedEntry.label }} details</header>
   <section class="entry-statistics">
     <div><label>Total time spent:</label> {{ selectedEntry.value | number }}</div>
-    <div *ngFor="let dir of selectedEntry.original.directives">
+    <div class="graph-panel" *ngIf="selectedEntry.value > 0">
+      <ngx-charts-pie-chart
+        legendTitle=""
+        [view]="view"
+        [scheme]="colorScheme"
+        [results]="graphData"
+        [gradient]="gradient"
+        [legend]="showLegend"
+        [legendPosition]="legendPosition"
+        [labels]="showLabels"
+        [doughnut]="isDoughnut"
+      >
+      </ngx-charts-pie-chart>
+    </div>
+    <!-- <div *ngFor="let dir of selectedEntry.original.directives">
       <label>{{ dir.name }}#changeDetection:</label> {{ dir.changeDetection | number }}
       <span *ngFor="let item of dir.lifecycle | keyvalue">
         <label>{{ dir.name }}#{{ item.key }}:</label> {{ item.value | number }}
       </span>
-    </div>
+    </div> -->
   </section>
 </div>
