@@ -12,7 +12,7 @@
 <div class="selected-entry" *ngIf="selectedEntry">
   <header>{{ selectedEntry.label }} details</header>
   <section class="entry-statistics">
-    <div><label>Total time spent:</label> {{ selectedEntry.value | number }}</div>
+    <div class="txtTotalTime"><label>Total time spent:</label> {{ selectedEntry.value | number }}</div>
     <div class="graph-panel" *ngIf="selectedEntry.value > 0">
       <ngx-charts-pie-chart
         legendTitle=""

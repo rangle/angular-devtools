@@ -37,7 +37,8 @@
 
 .selected-entry section {
   height: calc(100% - 40px - 23px);
-  width: calc(100% - 20px); /* removing the padding */
+  width: calc(100% - 20px);
+  /* removing the padding */
   overflow: auto;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
   padding: 10px;
@@ -83,4 +84,8 @@
 
 .entry-statistics div label {
   opacity: 0.7;
+}
+
+.txtTotalTime {
+  font-weight: bold;
 }
