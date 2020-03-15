@@ -6,9 +6,14 @@
 }
 
 .controls {
+  padding: 5px;
   top: 0;
   left: 300px;
   white-space: nowrap;
+}
+
+.controls label {
+  font-weight: 500;
 }
 
 .warning-no {
