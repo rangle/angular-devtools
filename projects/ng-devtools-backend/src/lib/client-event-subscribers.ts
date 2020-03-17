@@ -13,8 +13,7 @@ import {
 import { onChangeDetection } from './change-detection-tracker';
 import {
   ComponentTreeNode,
-  getDirectiveInputs,
-  getDirectiveOutputs,
+  getDirectiveMetaData,
   getLatestComponentState,
   queryDirectiveForest,
   updateState,
@@ -143,15 +142,15 @@ const serializeNodeDirectiveProperties = (node: ComponentTreeNode): DirectivesPr
   node.directives.forEach(dir => {
     result[dir.name] = {
       props: serializeComponentState(dir.instance),
-      inputs: getDirectiveInputs(dir.instance),
-      outputs: getDirectiveOutputs(dir.instance),
+      inputs: getDirectiveMetaData(dir.instance).inputs(),
+      outputs: getDirectiveMetaData(dir.instance).outputs(),
     };
   });
   if (node.component) {
     result[node.component.name] = {
       props: serializeComponentState(node.component.instance),
-      inputs: getDirectiveInputs(node.component.instance),
-      outputs: getDirectiveOutputs(node.component.instance),
+      inputs: getDirectiveMetaData(node.component.instance).inputs(),
+      outputs: getDirectiveMetaData(node.component.instance).outputs(),
     };
   }
   return result;

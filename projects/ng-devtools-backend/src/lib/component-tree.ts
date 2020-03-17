@@ -43,8 +43,8 @@ export const getLatestComponentState = (query: ComponentExplorerViewQuery): Dire
       }
       result[dir.name] = {
         props: deeplySerializeSelectedProperties(dir.instance, query.expandedProperties[dir.name]),
-        inputs: getDirectiveInputs(node.component.instance),
-        outputs: getDirectiveOutputs(node.component.instance),
+        inputs: getDirectiveMetaData(node.component.instance).inputs(),
+        outputs: getDirectiveMetaData(node.component.instance).outputs(),
       };
     });
 
@@ -57,30 +57,28 @@ export const getLatestComponentState = (query: ComponentExplorerViewQuery): Dire
           node.component.instance,
           query.expandedProperties[node.component.name]
         ),
-        inputs: getDirectiveInputs(node.component.instance),
-        outputs: getDirectiveOutputs(node.component.instance),
+        inputs: getDirectiveMetaData(node.component.instance).inputs(),
+        outputs: getDirectiveMetaData(node.component.instance).outputs(),
       };
     }
   }
   return result;
 };
 
-export const getDirectiveInputs = (dir: any) => {
-  try {
-    return dir.constructor.ɵcmp ? dir.constructor.ɵcmp.inputs : dir.constructor.ɵdir.inputs;
-  } catch {
-    console.warn('Could not find metadata for: ', dir);
-    return {};
-  }
-};
+export const getDirectiveMetaData = (dir: any) => {
+  const getDirInputOrOutput = (inputOrOutputKey: 'inputs' | 'outputs') => {
+    try {
+      return dir.constructor.ɵcmp ? dir.constructor.ɵcmp[inputOrOutputKey] : dir.constructor.ɵdir[inputOrOutputKey];
+    } catch {
+      console.warn('Could not find metadata for: ', dir);
+      return {};
+    }
+  };
 
-export const getDirectiveOutputs = (dir: any) => {
-  try {
-    return dir.constructor.ɵcmp ? dir.constructor.ɵcmp.outputs : dir.constructor.ɵdir.outputs;
-  } catch {
-    console.warn('Could not find metadata for: ', dir);
-    return {};
-  }
+  return {
+    inputs: () => getDirInputOrOutput('inputs'),
+    outputs: () => getDirInputOrOutput('outputs'),
+  };
 };
 
 const getRootLViewsHelper = (element: Element, rootLViews = new Set<any>()): Set<any> => {

@@ -5,7 +5,7 @@ import { MatTreeFlattener } from '@angular/material/tree';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { map } from 'rxjs/operators';
 import { DefaultIterableDiffer } from '@angular/core';
-import { diff } from '../../../../diffing';
+import { diff } from '../../../../../diffing';
 
 const expandable = (prop: Descriptor, messageBus?: MessageBus<Events>) => {
   if (!prop) {
@@ -153,19 +153,14 @@ export class PropertyDataSource extends DataSource<FlatNode> {
 
   private _getChildren(prop: Property): Property[] {
     const descriptor = prop.descriptor;
-    if (descriptor.type === PropType.Object && !(descriptor.value instanceof Observable)) {
+    if (
+      (descriptor.type === PropType.Object || descriptor.type === PropType.Array) &&
+      !(descriptor.value instanceof Observable)
+    ) {
       return Object.keys(descriptor.value || {}).map(name => {
         return {
           name,
           descriptor: descriptor.value ? descriptor.value[name] : null,
-          parent: prop,
-        };
-      });
-    } else if (descriptor.type === PropType.Array && !(descriptor.value instanceof Observable)) {
-      return (descriptor.value || []).map((el: Descriptor, idx: number) => {
-        return {
-          name: idx.toString(),
-          descriptor: el,
           parent: prop,
         };
       });

@@ -1,31 +1,8 @@
-<mat-tree class="property-list" [dataSource]="dataSource" [treeControl]="treeControl">
-  <mat-tree-node matTreeNodePaddingIndent="14" *matTreeNodeDef="let node" matTreeNodePadding>
-    <span class="name non-expandable"> {{ node.prop.name }} </span>:&nbsp;
-    <ng-container *ngIf="!node.prop.descriptor.editable; else editable">
-      <span class="value">
-        {{ node.prop.descriptor.preview }}
-      </span>
-    </ng-container>
-    <ng-template #editable>
-      <ng-property-editor
-        [key]="node.prop.name"
-        [initialValue]="node.prop.descriptor.value || node.prop.descriptor.preview"
-        (updateValue)="updateValue($event, node)"
-      >
-      </ng-property-editor>
-    </ng-template>
-  </mat-tree-node>
-
-  <mat-tree-node matTreeNodePaddingIndent="14" *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
-    <div (click)="toggle(node)">
-      <span class="arrow">
-        {{ treeControl.isExpanded(node) ? '▼' : '►' }}
-      </span>
-      &nbsp;
-      <span class="name"> {{ node.prop.name }} </span>:&nbsp;
-      <span class="value">
-        {{ treeControl.isExpanded(node) ? '' : node.prop.descriptor.preview }}
-      </span>
-    </div>
-  </mat-tree-node>
-</mat-tree>
+<ng-property-view-header [data]="data" (copyPropData)="copyPropData.emit($event)" (sort)="setSort($event)">
+</ng-property-view-header>
+<ng-property-view-body
+  [entityID]="getEntityID(data.key)"
+  [messageBus]="messageBus"
+  [name]="data.key"
+  [data]="sortedData"
+></ng-property-view-body>

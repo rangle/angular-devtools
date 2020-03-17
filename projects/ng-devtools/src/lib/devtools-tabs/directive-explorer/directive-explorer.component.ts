@@ -120,7 +120,7 @@ export class DirectiveExplorerComponent implements OnInit {
   private _latestDirectiveData(): ComponentExplorerViewProperties {
     const result = {};
     this.propertyViews.toArray().forEach(view => {
-      result[view.name] = view.getExpandedProperties();
+      result[view.propertyViewBody.name] = view.propertyViewBody.getExpandedProperties();
     });
     return result;
   }

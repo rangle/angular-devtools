@@ -1,74 +1,71 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { Descriptor, MessageBus, Events, DirectivePosition, NestedProp } from 'protocol';
-import { FlatTreeControl } from '@angular/cdk/tree';
-import { FlatNode, Property, PropertyDataSource } from './property-data-source';
-import { getExpandedDirectiveProperties } from './property-expanded-directive-properties';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Descriptor, DirectivePosition, Events, MessageBus } from 'protocol';
+import { IndexedNode } from '../../../directive-forest/index-forest';
+import { PropertyViewBodyComponent } from './property-view-body/property-view-body.component';
 
-interface UpdatedValueProperties {
-  key: string;
-  newValue: any;
+export enum SortOptions {
+  INPUTS,
+  OUTPUTS,
+  STATE,
 }
 
 @Component({
-  selector: `ng-property-view`,
+  selector: 'ng-property-view',
   templateUrl: './property-view.component.html',
   styleUrls: ['./property-view.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PropertyViewComponent {
-  @Input() set data(data: { [prop: string]: Descriptor }) {
-    if (this.dataSource) {
-      this.dataSource.update(data);
-      return;
-    }
-    this.dataSource = new PropertyDataSource(data, this.treeControl, this.entityID, this.messageBus);
-  }
+  @Output() copyPropData = new EventEmitter<{ [key: string]: Descriptor }>();
+  @Input() data;
   @Input() messageBus: MessageBus<Events>;
-  @Input() entityID: DirectivePosition;
-  @Input() name: string;
+  @Input() currentSelectedElement: IndexedNode;
 
-  dataSource: PropertyDataSource;
+  @ViewChild(PropertyViewBodyComponent) propertyViewBody: PropertyViewBodyComponent;
 
-  treeControl = new FlatTreeControl<FlatNode>(
-    node => node.level,
-    node => node.expandable
-  );
+  currentSort: SortOptions[] = [SortOptions.INPUTS, SortOptions.OUTPUTS, SortOptions.STATE];
 
-  hasChild = (_: number, node: FlatNode): boolean => node.expandable;
-
-  toggle(node: FlatNode): void {
-    if (this.treeControl.isExpanded(node)) {
-      this.treeControl.collapse(node);
-      return;
+  getEntityID(name: string): DirectivePosition {
+    const idx: DirectivePosition = {
+      element: this.currentSelectedElement.position,
+    };
+    const cmp = this.currentSelectedElement.component;
+    if (cmp && cmp.name === name) {
+      return idx;
     }
-    this.expand(node);
+    idx.directive = this.currentSelectedElement.directives.findIndex(d => d.name === name);
+    return idx;
   }
 
-  expand(node: FlatNode): void {
-    const { prop } = node;
-    if (!prop.descriptor.expandable) {
-      return;
-    }
-    this.treeControl.expand(node);
+  setSort(sort: SortOptions[]): void {
+    this.currentSort = sort;
   }
 
-  getExpandedProperties(): NestedProp[] {
-    return getExpandedDirectiveProperties(this.dataSource.data);
+  get sortedData(): { [prop: string]: Descriptor } {
+    const sortedData = {};
+    const allowList = this._computeAllowList();
+    Object.keys(this.data.value.props).forEach(key => {
+      if (allowList.includes(key)) {
+        sortedData[key] = this.data.value.props[key];
+      }
+    });
+    return sortedData;
   }
 
-  updateValue({ key, newValue }: UpdatedValueProperties, node: FlatNode): void {
-    const directiveId = this.entityID;
-    const keyPath = this._constructPathOfKeysToPropertyValue(node.prop);
-    this.messageBus.emit('updateState', [{ directiveId, keyPath, newValue }]);
-    node.prop.descriptor.value = newValue;
-  }
+  private _computeAllowList(): string[] {
+    const inputList = Object.keys(this.data.value.inputs);
+    const outputList = Object.keys(this.data.value.outputs);
+    const stateList = Object.keys(this.data.value.props).filter(
+      prop => !inputList.includes(prop) && !outputList.includes(prop)
+    );
+    const propList = {
+      [SortOptions.INPUTS]: inputList,
+      [SortOptions.OUTPUTS]: outputList,
+      [SortOptions.STATE]: stateList,
+    };
 
-  private _constructPathOfKeysToPropertyValue(nodePropToGetKeysFor: Property, keys: string[] = []): string[] {
-    keys.unshift(nodePropToGetKeysFor.name);
-    const parentNodeProp = nodePropToGetKeysFor.parent;
-    if (parentNodeProp) {
-      this._constructPathOfKeysToPropertyValue(parentNodeProp, keys);
-    }
-    return keys;
+    return [].concat.apply(
+      [],
+      this.currentSort.map(sortOption => propList[sortOption])
+    );
   }
 }
