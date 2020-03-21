@@ -142,40 +142,36 @@ export const createNestedSerializedDescriptor = (
   return nestedSerializedDescriptor;
 };
 
-// TODO: set proper types.
-const getDataByType = (type: PropType, valueByType: any, defaultValue?: any) => {
-  try {
-    switch (type) {
-      case PropType.Array:
-        return valueByType.arrayCase();
-      case PropType.BigInt:
-        return valueByType.bigIntCase();
-      case PropType.Boolean:
-        return valueByType.booleanCase();
-      case PropType.String:
-        return valueByType.stringCase();
-      case PropType.Function:
-        return valueByType.functionCase();
-      case PropType.Date:
-        return valueByType.dateCase();
-      case PropType.HTMLNode:
-        return valueByType.htmlElementCase();
-      case PropType.Null:
-        return valueByType.nullCase();
-      case PropType.Number:
-        return valueByType.numberCase();
-      case PropType.Object:
-        return valueByType.objectCase();
-      case PropType.Symbol:
-        return valueByType.symbolCase();
-      case PropType.Undefined:
-        return valueByType.undefinedCase();
-      case PropType.Unknown:
-        return valueByType.unknownCase();
-    }
-  } catch {
-    return defaultValue;
+const getDataByType = (type: PropType, valueByType: CommonTypeCases, defaultValue?: any) => {
+  let res;
+  if (type === PropType.Array) {
+    res = valueByType.arrayCase?.();
+  } else if (type === PropType.BigInt) {
+    res = valueByType.bigIntCase?.();
+  } else if (type === PropType.Boolean) {
+    res = valueByType.booleanCase?.();
+  } else if (type === PropType.String) {
+    res = valueByType.stringCase?.();
+  } else if (type === PropType.Function) {
+    res = valueByType.functionCase?.();
+  } else if (type === PropType.Date) {
+    res = valueByType.dateCase?.();
+  } else if (type === PropType.HTMLNode) {
+    res = valueByType.htmlElementCase?.();
+  } else if (type === PropType.Null) {
+    res = valueByType.nullCase?.();
+  } else if (type === PropType.Number) {
+    res = valueByType.numberCase?.();
+  } else if (type === PropType.Object) {
+    res = valueByType.objectCase?.();
+  } else if (type === PropType.Symbol) {
+    res = valueByType.symbolCase?.();
+  } else if (type === PropType.Undefined) {
+    res = valueByType.undefinedCase?.();
+  } else if (type === PropType.Unknown) {
+    res = valueByType.unknownCase?.();
   }
+  return res ? res : defaultValue;
 };
 
 const getDescriptorPreview = (propData: PropData) => {
