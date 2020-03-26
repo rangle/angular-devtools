@@ -4,8 +4,8 @@ import { DialogComponent } from './dialog.component';
 
 @Component({
   selector: 'app-todo-demo',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  templateUrl: './app-todo.component.html',
+  styleUrls: ['./app-todo.component.css'],
 })
 export class AppTodoComponent {
   name: string;

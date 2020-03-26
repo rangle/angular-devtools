@@ -9,7 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 
-import { AppTodoComponent } from './app.component';
+import { AppTodoComponent } from './app-todo.component';
 
 import { DialogComponent } from './dialog.component';
 
