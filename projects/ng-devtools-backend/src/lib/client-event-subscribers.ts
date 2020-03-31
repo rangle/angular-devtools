@@ -55,18 +55,10 @@ const getLatestComponentExplorerViewCallback = (messageBus: MessageBus<Events>) 
   // We want to force re-indexing of the component tree.
   // Pressing the refresh button means the user saw stuck UI.
   indexDirectiveForest();
-  if (!query) {
-    messageBus.emit('latestComponentExplorerView', [
-      {
-        forest: prepareForestForSerialization(getDirectiveForest()),
-      },
-    ]);
-    return;
-  }
   messageBus.emit('latestComponentExplorerView', [
     {
       forest: prepareForestForSerialization(getDirectiveForest()),
-      properties: getLatestComponentState(query),
+      properties: query ? getLatestComponentState(query) : undefined,
     },
   ]);
 };
