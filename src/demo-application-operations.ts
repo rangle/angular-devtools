@@ -1,5 +1,4 @@
 import { ApplicationOperations } from 'ng-devtools';
-import { environment } from './environments/environment';
 
 export class DemoApplicationOperations extends ApplicationOperations {
   viewSource(position: number[]): void {
@@ -9,9 +8,5 @@ export class DemoApplicationOperations extends ApplicationOperations {
   selectDomElement(position: number[]): void {
     console.warn('selectDomElement() is not implemented because the demo app runs in an Iframe');
     throw new Error('Not implemented in demo app.');
-  }
-
-  get environment(): any {
-    return environment;
   }
 }

@@ -2,7 +2,7 @@ import { Component, Input, ViewChild } from '@angular/core';
 import { Events, MessageBus } from 'protocol';
 import { MatTabGroup } from '@angular/material/tabs';
 import { DirectiveExplorerComponent } from './directive-explorer/directive-explorer.component';
-import { ApplicationOperations } from '../application-operations';
+import { ApplicationEnvironment } from '../application-environment';
 
 @Component({
   selector: 'ng-devtools-tabs',
@@ -14,10 +14,10 @@ export class DevToolsTabsComponent {
   @ViewChild(MatTabGroup) tabGroup: MatTabGroup;
   @ViewChild(DirectiveExplorerComponent) directiveExplorer: DirectiveExplorerComponent;
 
-  constructor(private _messageBus: MessageBus<Events>, private _applicationOperations: ApplicationOperations) {}
+  constructor(private _messageBus: MessageBus<Events>, private _applicationEnvironment: ApplicationEnvironment) {}
 
   get latestSHA(): string {
-    return this._applicationOperations.environment.process.env.LATEST_SHA;
+    return this._applicationEnvironment.environment.process.env.LATEST_SHA;
   }
 
   inspectorRunning = false;

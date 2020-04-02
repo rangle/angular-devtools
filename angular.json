@@ -65,7 +65,7 @@
         "serve": {
           "builder": "ngx-build-plus:dev-server",
           "options": {
-            "extraWebpackConfig": "src/shell-dev-webpack.config.js",
+            "extraWebpackConfig": "shell-dev-webpack.config.js",
             "browserTarget": "shell-dev:build"
           },
           "configurations": {
