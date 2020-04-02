@@ -7,6 +7,7 @@
     "cypress:verify": "cypress verify",
     "start": "ng serve",
     "build": "ng build",
+    "build:chrome": "LATEST_SHA=`git rev-parse --short HEAD` ng build shell-chrome",
     "test": "ng test",
     "lint": "ng lint",
     "lint:fix": "ng lint --fix",
@@ -68,6 +69,7 @@
     "@types/jasmine": "~3.5.0",
     "@types/jasminewd2": "~2.0.3",
     "codelyzer": "^5.2.1",
+    "cross-env": "^7.0.2",
     "cypress": "^4.0.0",
     "cypress-browser-extension-plugin": "^0.1.0",
     "cypress-iframe": "^1.0.1",
@@ -89,6 +91,7 @@
     "tsickle": "^0.35.0",
     "tslint": "~5.18.0",
     "typescript": "~3.7.0",
-    "wait-on": "^4.0.1"
+    "wait-on": "^4.0.1",
+    "webpack": "^4.42.1"
   }
 }
