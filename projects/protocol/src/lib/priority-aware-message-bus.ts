@@ -14,7 +14,7 @@ type TopicsInProgress = {
 };
 
 const THROTTLE_METHODS: ThrottleTopicDuration = {
-  // getLatestComponentExplorerView: 100,
+  getLatestComponentExplorerView: 10000,
 };
 
 type TopicBlockSequence = {
@@ -24,7 +24,7 @@ type TopicBlockSequence = {
 // We can't refresh the view until we've received
 // a response with the latest nested properties.
 const TOPIC_BLOCK_SEQUENCE: TopicBlockSequence = {
-  // getLatestComponentExplorerView: ['getNestedProperties'],
+  getLatestComponentExplorerView: ['getNestedProperties'],
 };
 
 type TopicSequence = {
@@ -32,11 +32,11 @@ type TopicSequence = {
 };
 
 const TOPIC_RESPONSE: TopicSequence = {
-  // getNestedProperties: 'nestedProperties',
+  getNestedProperties: 'nestedProperties',
 };
 
 const TOPIC_REQUEST: TopicSequence = {
-  // nestedProperties: 'getNestedProperties',
+  nestedProperties: 'getNestedProperties',
 };
 
 export class PriorityAwareMessageBus extends MessageBus<Events> {
