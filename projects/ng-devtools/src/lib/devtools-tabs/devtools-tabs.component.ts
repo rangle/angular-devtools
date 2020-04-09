@@ -22,7 +22,12 @@ export class DevToolsTabsComponent {
 
   inspectorRunning = false;
 
-  toggleInspector(): void {
+  toggleInspector(options: { forceStop: boolean } = { forceStop: false }): void {
+    if (options.forceStop) {
+      this.inspectorRunning = false;
+      this._messageBus.emit('inspectorEnd');
+      return;
+    }
     this.toggleInspectorState();
     this.emitInspectorEvent();
   }

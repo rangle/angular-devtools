@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, HostListener, OnInit, Output, ViewChild } from '@angular/core';
 import {
   MessageBus,
   Events,
@@ -48,9 +48,12 @@ const sameDirectives = (a: IndexedNode, b: IndexedNode) => {
   ],
 })
 export class DirectiveExplorerComponent implements OnInit {
+  @Output() stopInspector = new EventEmitter<void>();
+
   currentSelectedElement: IndexedNode | null = null;
   forest: DevToolsNode[];
   highlightIDinTreeFromElement: ElementPosition | null = null;
+  idToSelectFromHighlighter: ElementPosition | null = null;
   splitDirection = 'horizontal';
 
   private _changeSize = new Subject<Event>();
@@ -105,6 +108,9 @@ export class DirectiveExplorerComponent implements OnInit {
 
     this._messageBus.on('highlightComponentInTreeFromElement', (position: ElementPosition) => {
       this.highlightIDinTreeFromElement = position;
+    });
+    this._messageBus.on('selectComponentInTreeFromElement', (position: ElementPosition) => {
+      this.idToSelectFromHighlighter = position;
     });
     this._messageBus.on('removeHighlightFromComponentTree', () => {
       this.highlightIDinTreeFromElement = null;
@@ -173,8 +179,12 @@ export class DirectiveExplorerComponent implements OnInit {
     this._messageBus.emit('highlightElementFromComponentTree', [position]);
   }
 
-  handleUnhighlightFromComponent(_: ElementPosition | null): void {
+  handleUnhighlightFromComponent(stopInspector: boolean): void {
     this._messageBus.emit('removeHighlightFromElement');
+    if (stopInspector) {
+      this.stopInspector.emit();
+      this.highlightIDinTreeFromElement = null;
+    }
   }
 
   @HostListener('window:resize', ['$event'])

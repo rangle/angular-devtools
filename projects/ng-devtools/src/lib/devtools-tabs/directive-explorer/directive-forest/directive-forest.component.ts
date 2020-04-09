@@ -5,7 +5,9 @@ import {
   EventEmitter,
   HostListener,
   Input,
+  OnChanges,
   Output,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { DevToolsNode, ElementPosition } from 'protocol';
@@ -14,6 +16,7 @@ import { ComponentDataSource, FlatNode } from './component-data-source';
 import { isChildOf, parentCollapsed } from './directive-forest-utils';
 import { IndexedNode } from './index-forest';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import { arrayEquals } from 'shared-utils';
 
 @Component({
   selector: 'ng-directive-forest',
@@ -21,7 +24,7 @@ import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
   styleUrls: ['./directive-forest.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DirectiveForestComponent {
+export class DirectiveForestComponent implements OnChanges {
   @Input() set forest(forest: DevToolsNode[]) {
     const result = this._updateForest(forest);
     const changed = result.movedItems.length || result.newItems.length || result.removedItems.length;
@@ -29,14 +32,15 @@ export class DirectiveForestComponent {
       this._reselectNodeOnUpdate();
     }
   }
-  @Input() highlightIDinTreeFromElement: ElementPosition | null = null;
+  @Input() positionToSelectFromHighlighter: ElementPosition;
+  @Input() highlightIdInTreeFromElement: ElementPosition | null = null;
   @Input() currentSelectedElement: IndexedNode;
 
   @Output() selectNode = new EventEmitter<IndexedNode | null>();
   @Output() selectDomElement = new EventEmitter<IndexedNode>();
   @Output() setParents = new EventEmitter<FlatNode[] | null>();
   @Output() highlightFromComponent = new EventEmitter<ElementPosition>();
-  @Output() unhighlightFromComponent = new EventEmitter<null>();
+  @Output() unhighlightFromComponent = new EventEmitter<{ stopInspector: boolean }>();
 
   @ViewChild(CdkVirtualScrollViewport) scrollParentElement: CdkVirtualScrollViewport;
 
@@ -55,7 +59,26 @@ export class DirectiveForestComponent {
 
   private _initialized = false;
 
-  hasChild = (_: number, node: FlatNode) => node.expandable;
+  constructor(private _host: ElementRef) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.positionToSelectFromHighlighter) {
+      const oldPositionToSelect = changes.positionToSelectFromHighlighter.previousValue;
+      const newPositionToSelect = changes.positionToSelectFromHighlighter.currentValue;
+
+      if (newPositionToSelect && oldPositionToSelect !== newPositionToSelect) {
+        this.selectNodeByPosition(newPositionToSelect);
+        this.unhighlightFromComponent.emit({ stopInspector: true });
+      }
+    }
+  }
+
+  selectNodeByPosition(position: ElementPosition): void {
+    const foundNode = this.dataSource.data.find((node) => arrayEquals(node.position, position));
+    if (foundNode) {
+      this.handleSelect(foundNode);
+    }
+  }
 
   handleSelect(node: FlatNode): void {
     this.currentlyMatchedIndex = this.dataSource.data.findIndex((matchedNode) => matchedNode.id === node.id);
@@ -291,12 +314,12 @@ export class DirectiveForestComponent {
   }
 
   removeHighlight(): void {
-    this.unhighlightFromComponent.emit();
+    this.unhighlightFromComponent.emit({ stopInspector: false });
   }
 
   isHighlighted(node: FlatNode): boolean {
     return (
-      !!this.highlightIDinTreeFromElement && this.highlightIDinTreeFromElement.join(',') === node.position.join(',')
+      !!this.highlightIdInTreeFromElement && this.highlightIdInTreeFromElement.join(',') === node.position.join(',')
     );
   }
 

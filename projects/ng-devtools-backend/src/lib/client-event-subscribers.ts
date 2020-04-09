@@ -140,8 +140,11 @@ const setupInspector = (messageBus: MessageBus<Events>) => {
   const onComponentLeave = () => {
     messageBus.emit('removeHighlightFromComponentTree');
   };
+  const onComponentSelect = (position: ElementPosition) => {
+    messageBus.emit('selectComponentInTreeFromElement', [position]);
+  };
 
-  const inspectorOptions: ComponentInspectorOptions = { onComponentEnter, onComponentLeave };
+  const inspectorOptions: ComponentInspectorOptions = { onComponentEnter, onComponentLeave, onComponentSelect };
   const inspector = new ComponentInspector(inspectorOptions);
 
   messageBus.on('inspectorStart', inspector.startInspecting);

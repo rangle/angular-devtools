@@ -163,7 +163,10 @@ const findElementIDFromNativeElementInForest = (
 
   for (const el of forest) {
     if (el.children.length) {
-      return findElementIDFromNativeElementInForest(el.children, nativeElement);
+      const position = findElementIDFromNativeElementInForest(el.children, nativeElement);
+      if (position) {
+        return position;
+      }
     }
   }
   return null;
