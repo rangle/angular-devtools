@@ -4,12 +4,11 @@
       (selectNode)="handleNodeSelection($event)"
       (selectDomElement)="handleSelectDomElement($event)"
       (setParents)="handleSetParents($event)"
-      (highlightFromComponent)="handleHighlightFromComponent($event)"
-      (unhighlightFromComponent)="handleUnhighlightFromComponent($event.stopInspector)"
+      (highlightComponent)="highlightComponent($event)"
+      (removeComponentHighlight)="removeComponentHighlight()"
+      (toggleInspector)="toggleInspector.emit()"
       [forest]="forest"
       [currentSelectedElement]="currentSelectedElement"
-      [highlightIdInTreeFromElement]="highlightIDinTreeFromElement"
-      [positionToSelectFromHighlighter]="idToSelectFromHighlighter"
     ></ng-directive-forest>
   </as-split-area>
   <as-split-area size="40" minSize="25">

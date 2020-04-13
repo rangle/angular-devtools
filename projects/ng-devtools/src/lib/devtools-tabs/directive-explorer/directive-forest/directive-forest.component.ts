@@ -1,16 +1,18 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
   HostListener,
   Input,
   OnChanges,
+  OnInit,
   Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { DevToolsNode, ElementPosition } from 'protocol';
+import { DevToolsNode, ElementPosition, Events, MessageBus } from 'protocol';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { ComponentDataSource, FlatNode } from './component-data-source';
 import { isChildOf, parentCollapsed } from './directive-forest-utils';
@@ -24,7 +26,7 @@ import { arrayEquals } from 'shared-utils';
   styleUrls: ['./directive-forest.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DirectiveForestComponent implements OnChanges {
+export class DirectiveForestComponent implements OnInit {
   @Input() set forest(forest: DevToolsNode[]) {
     const result = this._updateForest(forest);
     const changed = result.movedItems.length || result.newItems.length || result.removedItems.length;
@@ -32,15 +34,14 @@ export class DirectiveForestComponent implements OnChanges {
       this._reselectNodeOnUpdate();
     }
   }
-  @Input() positionToSelectFromHighlighter: ElementPosition;
-  @Input() highlightIdInTreeFromElement: ElementPosition | null = null;
   @Input() currentSelectedElement: IndexedNode;
 
   @Output() selectNode = new EventEmitter<IndexedNode | null>();
   @Output() selectDomElement = new EventEmitter<IndexedNode>();
   @Output() setParents = new EventEmitter<FlatNode[] | null>();
-  @Output() highlightFromComponent = new EventEmitter<ElementPosition>();
-  @Output() unhighlightFromComponent = new EventEmitter<{ stopInspector: boolean }>();
+  @Output() highlightComponent = new EventEmitter<ElementPosition>();
+  @Output() removeComponentHighlight = new EventEmitter<void>();
+  @Output() toggleInspector = new EventEmitter<void>();
 
   @ViewChild(CdkVirtualScrollViewport) scrollParentElement: CdkVirtualScrollViewport;
 
@@ -49,6 +50,13 @@ export class DirectiveForestComponent implements OnChanges {
 
   selectedNode: FlatNode | null = null;
   parents: FlatNode[];
+
+  private _highlightIDinTreeFromElement: number | null = null;
+
+  set highlightIDinTreeFromElement(id: number | null) {
+    this._highlightIDinTreeFromElement = id;
+    this._cdr.markForCheck();
+  }
 
   readonly treeControl = new FlatTreeControl<FlatNode>(
     (node) => node.level,
@@ -59,22 +67,31 @@ export class DirectiveForestComponent implements OnChanges {
 
   private _initialized = false;
 
-  constructor(private _host: ElementRef) {}
+  constructor(private _messageBus: MessageBus<Events>, private _cdr: ChangeDetectorRef) {}
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.positionToSelectFromHighlighter) {
-      const oldPositionToSelect = changes.positionToSelectFromHighlighter.previousValue;
-      const newPositionToSelect = changes.positionToSelectFromHighlighter.currentValue;
-
-      if (newPositionToSelect && oldPositionToSelect !== newPositionToSelect) {
-        this.selectNodeByPosition(newPositionToSelect);
-        this.unhighlightFromComponent.emit({ stopInspector: true });
-      }
-    }
+  ngOnInit(): void {
+    this.subscribeToInspectorEvents();
   }
 
-  selectNodeByPosition(position: ElementPosition): void {
-    const foundNode = this.dataSource.data.find((node) => arrayEquals(node.position, position));
+  subscribeToInspectorEvents(): void {
+    this._messageBus.on('selectComponent', (id: number) => {
+      console.log(id);
+      this.selectNodeByComponentId(id);
+      this.toggleInspector.emit();
+    });
+
+    this._messageBus.on('highlightComponent', (id: number) => {
+      console.log(id);
+      this.highlightIDinTreeFromElement = id;
+    });
+
+    this._messageBus.on('removeComponentHighlight', () => {
+      this.highlightIDinTreeFromElement = null;
+    });
+  }
+
+  selectNodeByComponentId(id: number): void {
+    const foundNode = this.dataSource.data.find((node) => node.original.component?.id === id);
     if (foundNode) {
       this.handleSelect(foundNode);
     }
@@ -310,17 +327,15 @@ export class DirectiveForestComponent implements OnChanges {
   }
 
   highlightNode(position: ElementPosition): void {
-    this.highlightFromComponent.emit(position);
+    this.highlightComponent.emit(position);
   }
 
   removeHighlight(): void {
-    this.unhighlightFromComponent.emit({ stopInspector: false });
+    this.removeComponentHighlight.emit();
   }
 
   isHighlighted(node: FlatNode): boolean {
-    return (
-      !!this.highlightIdInTreeFromElement && this.highlightIdInTreeFromElement.join(',') === node.position.join(',')
-    );
+    return !!this._highlightIDinTreeFromElement && this._highlightIDinTreeFromElement === node.original.component?.id;
   }
 
   isElement(node: FlatNode): boolean | null {

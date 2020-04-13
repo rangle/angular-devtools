@@ -48,12 +48,10 @@ const sameDirectives = (a: IndexedNode, b: IndexedNode) => {
   ],
 })
 export class DirectiveExplorerComponent implements OnInit {
-  @Output() stopInspector = new EventEmitter<void>();
+  @Output() toggleInspector = new EventEmitter<void>();
 
   currentSelectedElement: IndexedNode | null = null;
   forest: DevToolsNode[];
-  highlightIDinTreeFromElement: ElementPosition | null = null;
-  idToSelectFromHighlighter: ElementPosition | null = null;
   splitDirection = 'horizontal';
 
   private _changeSize = new Subject<Event>();
@@ -78,6 +76,7 @@ export class DirectiveExplorerComponent implements OnInit {
 
   ngOnInit(): void {
     this.subscribeToBackendEvents();
+    this.refresh();
   }
 
   handleNodeSelection(node: IndexedNode | null): void {
@@ -106,18 +105,7 @@ export class DirectiveExplorerComponent implements OnInit {
       }
     });
 
-    this._messageBus.on('highlightComponentInTreeFromElement', (position: ElementPosition) => {
-      this.highlightIDinTreeFromElement = position;
-    });
-    this._messageBus.on('selectComponentInTreeFromElement', (position: ElementPosition) => {
-      this.idToSelectFromHighlighter = position;
-    });
-    this._messageBus.on('removeHighlightFromComponentTree', () => {
-      this.highlightIDinTreeFromElement = null;
-    });
-
     this._messageBus.on('componentTreeDirty', () => this.refresh());
-    this.refresh();
   }
 
   refresh(): void {
@@ -175,16 +163,12 @@ export class DirectiveExplorerComponent implements OnInit {
     };
   }
 
-  handleHighlightFromComponent(position: ElementPosition): void {
-    this._messageBus.emit('highlightElementFromComponentTree', [position]);
+  highlightComponent(position: ElementPosition): void {
+    this._messageBus.emit('createHighlightOverlay', [position]);
   }
 
-  handleUnhighlightFromComponent(stopInspector: boolean): void {
-    this._messageBus.emit('removeHighlightFromElement');
-    if (stopInspector) {
-      this.stopInspector.emit();
-      this.highlightIDinTreeFromElement = null;
-    }
+  removeComponentHighlight(): void {
+    this._messageBus.emit('removeHighlightOverlay');
   }
 
   @HostListener('window:resize', ['$event'])

@@ -164,9 +164,10 @@ export interface Events {
   sendProfilerChunk: (results: ProfilerFrame) => void;
   profilerResults: (results: ProfilerFrame) => void;
 
-  highlightElementFromComponentTree: (position: ElementPosition) => void;
-  removeHighlightFromElement: () => void;
-  highlightComponentInTreeFromElement: (position: ElementPosition) => void;
-  selectComponentInTreeFromElement: (position: ElementPosition) => void;
-  removeHighlightFromComponentTree: () => void;
+  createHighlightOverlay: (position: ElementPosition) => void;
+  removeHighlightOverlay: () => void;
+
+  highlightComponent: (id: number) => void;
+  selectComponent: (id: number) => void;
+  removeComponentHighlight: () => void;
 }

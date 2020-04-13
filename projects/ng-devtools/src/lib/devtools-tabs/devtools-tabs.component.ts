@@ -22,12 +22,7 @@ export class DevToolsTabsComponent {
 
   inspectorRunning = false;
 
-  toggleInspector(options: { forceStop: boolean } = { forceStop: false }): void {
-    if (options.forceStop) {
-      this.inspectorRunning = false;
-      this._messageBus.emit('inspectorEnd');
-      return;
-    }
+  toggleInspector(): void {
     this.toggleInspectorState();
     this.emitInspectorEvent();
   }
@@ -38,6 +33,7 @@ export class DevToolsTabsComponent {
       this.tabGroup.selectedIndex = 0;
     } else {
       this._messageBus.emit('inspectorEnd');
+      this._messageBus.emit('removeHighlightOverlay');
     }
   }
 

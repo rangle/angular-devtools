@@ -1,18 +1,12 @@
 import { unHighlight, highlight, findComponentAndHost } from '../highlighter';
 import { Type } from '@angular/core';
-import {
-  buildDirectiveForest,
-  ComponentTreeNode,
-  findNodeInForest,
-  getIndexForNativeElementInForest,
-} from '../component-tree';
+import { buildDirectiveForest, ComponentTreeNode, findNodeInForest } from '../component-tree';
 import { ElementPosition } from 'protocol';
-import { IndexedNode, indexForest } from '../observer/identity-tracker';
-import { getDirectiveForest } from '../component-tree-identifiers';
+import { getDirectiveId } from '../component-tree-identifiers';
 
 export interface ComponentInspectorOptions {
-  onComponentEnter: (position: ElementPosition) => void;
-  onComponentSelect: (position: ElementPosition) => void;
+  onComponentEnter: (id: number) => void;
+  onComponentSelect: (id: number) => void;
   onComponentLeave: () => void;
 }
 
@@ -52,7 +46,7 @@ export class ComponentInspector {
     e.preventDefault();
 
     if (this._selectedComponent.component && this._selectedComponent.host) {
-      this._onComponentSelect(getIndexForNativeElementInForest(this._selectedComponent.host, getDirectiveForest()));
+      this._onComponentSelect(getDirectiveId(this._selectedComponent.component));
     }
   }
 
@@ -67,7 +61,7 @@ export class ComponentInspector {
     unHighlight();
     if (this._selectedComponent.component && this._selectedComponent.host) {
       highlight(this._selectedComponent.host);
-      this._onComponentEnter(getIndexForNativeElementInForest(this._selectedComponent.host, getDirectiveForest()));
+      this._onComponentEnter(getDirectiveId(this._selectedComponent.component));
     }
   }
 
