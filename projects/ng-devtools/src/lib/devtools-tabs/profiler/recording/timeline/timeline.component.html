@@ -13,7 +13,9 @@
     [estimatedFrameRate]="estimateFrameRate(record.duration)"
     [visualizationMode]="visualizationMode"
     (changeVisualizationMode)="visualizationMode = $event"
-    (exportProfile)="exportProfile.emit($event)"
+    (exportProfile)="exportProfile.emit()"
+    (toggleChangeDetection)="showChangeDetection = $event"
+    (hideSmallFrames)="toggleSmallFrames($event)"
   ></ng-timeline-controls>
   <ng-frame-selector
     (move)="move($event)"
@@ -22,5 +24,9 @@
     [graphData]="graphData"
     [currentFrame]="currentFrameIndex"
   ></ng-frame-selector>
-  <ng-timeline-visualizer [visualizationMode]="visualizationMode" [frame]="record"></ng-timeline-visualizer>
+  <ng-timeline-visualizer
+    [showChangeDetection]="showChangeDetection"
+    [visualizationMode]="visualizationMode"
+    [frame]="record"
+  ></ng-timeline-visualizer>
 </ng-template>

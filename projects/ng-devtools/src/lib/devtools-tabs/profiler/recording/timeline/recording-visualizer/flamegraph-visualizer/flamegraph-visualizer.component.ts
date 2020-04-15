@@ -20,6 +20,10 @@ export interface GraphNode {
   styleUrls: ['./flamegraph-visualizer.component.scss'],
 })
 export class FlamegraphVisualizerComponent {
+  @Input() set showChangeDetection(flag: boolean) {
+    this._showChangeDetection = flag;
+    this._selectFrame();
+  }
   profilerBars: FlamegraphNode[] = [];
   selectedEntry: FlamegraphNode | null = null;
 
@@ -80,11 +84,6 @@ export class FlamegraphVisualizerComponent {
 
   formatToolTip(data: any): string {
     return `${data.data.name} ${data.data.value}ms`;
-  }
-
-  updateView(event: MatCheckboxChange): void {
-    this._showChangeDetection = event.checked;
-    this._selectFrame();
   }
 
   private _selectFrame(): void {

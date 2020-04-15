@@ -10,6 +10,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { FrameSelectorComponent } from './frame-selector/frame-selector.component';
 import { TimelineControlsComponent } from './timeline-controls/timeline-controls.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [TimelineComponent, FrameSelectorComponent, TimelineControlsComponent],
@@ -22,6 +23,7 @@ import { TimelineControlsComponent } from './timeline-controls/timeline-controls
     MatIconModule,
     NgxFlamegraphModule,
     MatSelectModule,
+    MatCheckboxModule,
   ],
   exports: [TimelineComponent],
 })

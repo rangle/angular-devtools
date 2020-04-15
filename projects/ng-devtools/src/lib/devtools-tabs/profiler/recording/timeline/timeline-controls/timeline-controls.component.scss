@@ -4,6 +4,17 @@
   white-space: nowrap;
   padding: 5px;
 
+  .controls-info {
+    display: inline-flex;
+    flex-direction: column;
+
+    .checkboxes {
+      .mat-checkbox {
+        padding-right: 8px;
+      }
+    }
+  }
+
   mat-form-field {
     margin-left: 15px;
     margin-right: 15px;

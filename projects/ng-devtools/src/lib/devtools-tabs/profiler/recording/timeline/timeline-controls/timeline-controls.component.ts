@@ -14,6 +14,8 @@ export class TimelineControlsComponent {
   @Input() visualizationMode: VisualizationMode;
   @Output() changeVisualizationMode = new EventEmitter<VisualizationMode>();
   @Output() exportProfile = new EventEmitter<void>();
+  @Output() toggleChangeDetection = new EventEmitter<boolean>();
+  @Output() hideSmallFrames = new EventEmitter<boolean>();
 
   flameGraphMode = VisualizationMode.FlameGraph;
   treeMapMode = VisualizationMode.TreeMap;

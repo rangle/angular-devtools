@@ -9,6 +9,7 @@ import { ProfilerFrame } from 'protocol';
 })
 export class TimelineVisualizerComponent {
   @Input() visualizationMode: VisualizationMode;
+  @Input() showChangeDetection: boolean;
   @Input() frame: ProfilerFrame;
 
   cmpVisualizationModes = VisualizationMode;

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ProfilerFrame } from 'protocol';
 import { GraphNode } from './record-formatter/record-formatter';
 
@@ -18,12 +18,15 @@ const MAX_HEIGHT = 50;
 })
 export class TimelineComponent {
   @Input() set records(data: ProfilerFrame[]) {
-    this.profilerFrames = data.filter((frame) => frame.duration > 0);
+    this._profilerFrames = this.profilerFrames = data.filter((frame) => frame.duration > 0);
     this.renderBarChart(this.profilerFrames);
   }
-  @Input() profilerFrames: ProfilerFrame[] = [];
   @Output() exportProfile = new EventEmitter<void>();
 
+  private _profilerFrames: ProfilerFrame[] = [];
+
+  profilerFrames: ProfilerFrame[] = [];
+  showChangeDetection = false;
   visualizationMode = VisualizationMode.BarGraph;
   graphData: GraphNode[] = [];
   currentFrameIndex = 0;
@@ -60,8 +63,12 @@ export class TimelineComponent {
   }
 
   renderBarChart(records: ProfilerFrame[]): void {
-    const maxValue = records.reduce((acc: number, frame: ProfilerFrame) => Math.max(acc, frame.duration), 0);
-    const multiplicationFactor = parseFloat((MAX_HEIGHT / maxValue).toFixed(2));
+    this.currentFrameIndex = 0;
+    const maxDuration = this.profilerFrames.reduce(
+      (acc: number, frame: ProfilerFrame) => Math.max(acc, frame.duration),
+      0
+    );
+    const multiplicationFactor = parseFloat((MAX_HEIGHT / maxDuration).toFixed(2));
     this.graphData = records.map((r) => {
       const height = r.duration * multiplicationFactor;
       const colorPercentage = Math.round((height / MAX_HEIGHT) * 100);
@@ -80,5 +87,17 @@ export class TimelineComponent {
       const toolTip = `${r.source} TimeSpent: ${r.duration.toFixed(3)}ms`;
       return { style, toolTip };
     });
+  }
+
+  toggleSmallFrames(hideSmallFrames: boolean): void {
+    if (hideSmallFrames) {
+      const totalProfiledDuration = (acc: number, frame: ProfilerFrame) => acc + frame.duration;
+      const mean = this.profilerFrames.reduce(totalProfiledDuration, 0) / this.profilerFrames.length;
+      const removeFramesWithDurationLessThanMean = (frame: ProfilerFrame) => frame.duration >= mean;
+      this.profilerFrames = this.profilerFrames.filter(removeFramesWithDurationLessThanMean);
+    } else {
+      this.profilerFrames = this._profilerFrames;
+    }
+    this.renderBarChart(this.profilerFrames);
   }
 }
