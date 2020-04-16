@@ -18,7 +18,7 @@
     "cy:version": "$(npm bin)/cypress version",
     "cy:run": "$(yarn bin)/cypress run",
     "cy:open": "$(yarn bin)/cypress open",
-    "cy:ci": "start-server-and-test start http-get://localhost:4200 cy:run",
+    "cy:ci": "DEBUG=start-server-and-test start-server-and-test start http-get://localhost:4200 cy:run",
     "cy:watch": "start-server-and-test start http-get://localhost:4200 cy:open",
     "test:backend": "ng test ng-devtools-backend --watch=false",
     "test:devtools": "ng test ng-devtools --watch=false",
