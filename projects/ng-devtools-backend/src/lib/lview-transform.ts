@@ -83,13 +83,17 @@ const extractNodes = (lViewOrLContainer: any, nodes: ComponentTreeNode[] = []): 
   const lView = lViewOrLContainer;
   const tView = lView[LVIEW_TVIEW];
   for (let i = HEADER_OFFSET; i < lView.length; i++) {
-    if (lView[i] && lView[i][ELEMENT] instanceof Node) {
-      const node = getNode(lView, tView.data, i);
+    if (lView[i]) {
+      if (lView[i][ELEMENT] instanceof Node) {
+        const node = getNode(lView, tView.data, i);
 
-      // TODO(mgechev): verify if this won't make us skip projected content.
-      if (node.component || node.directives.length) {
-        nodes.push(node);
-        extractNodes(lView[i], node.children);
+        // TODO(mgechev): verify if this won't make us skip projected content.
+        if (node.component || node.directives.length) {
+          nodes.push(node);
+          extractNodes(lView[i], node.children);
+        }
+      } else if (isLContainer(lView[i]) && isLView(lView[i][ELEMENT])) {
+        extractNodes(lView[i][ELEMENT], nodes);
       }
     }
   }
