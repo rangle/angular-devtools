@@ -1,9 +1,9 @@
 header {
-  background-color: #eee;
+  background-color: var(--ngd-property-view-header-background);
   padding-left: 9px;
-  border-top: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
-  color: hsla(0, 0%, 32%, 1);
+  border-top: 1px solid var(--ngd-property-view-header-border-top-color);
+  border-bottom: 1px solid var(--ngd-property-view-header-border-top-bottom);
+  color: var(--ngd-property-view-header-color);
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;

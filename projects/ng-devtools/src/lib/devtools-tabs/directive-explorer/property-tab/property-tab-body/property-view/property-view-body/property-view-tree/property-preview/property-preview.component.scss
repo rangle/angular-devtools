@@ -1,7 +1,7 @@
 .function {
   &:hover {
-    background: #4da1ff;
-    color: #fff;
+    background-color: var(--ngd-property-preview-arrow-color);
+    color: var(--ngd-property-preview-arrow-color);
     cursor: pointer;
   }
 }

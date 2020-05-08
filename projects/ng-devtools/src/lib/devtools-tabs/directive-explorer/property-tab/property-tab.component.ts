@@ -6,6 +6,7 @@ import { DirectivePosition } from 'protocol';
 @Component({
   templateUrl: './property-tab.component.html',
   selector: 'ng-property-tab',
+  styleUrls: ['./property-tab.component.scss'],
 })
 export class PropertyTabComponent {
   @Input() currentSelectedElement: IndexedNode;

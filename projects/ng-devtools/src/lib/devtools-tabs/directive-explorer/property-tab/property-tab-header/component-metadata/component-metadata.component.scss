@@ -10,12 +10,12 @@
   }
 
   &:hover {
-    background-color: #eee;
+    background-color: var(--ngd-component-metadata-hover-background);
     cursor: pointer;
   }
 
   &:active {
-    background-color: #bcbcbc;
+    background-color: var(--ngd-component-metadata-active-background);
   }
 }
 

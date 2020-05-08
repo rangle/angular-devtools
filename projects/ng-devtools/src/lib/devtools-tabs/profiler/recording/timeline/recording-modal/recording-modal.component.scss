@@ -11,7 +11,7 @@
   position: relative;
   overflow: hidden;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--ngd-profiler-recording-modal-background);
   display: flex;
   justify-content: center;
 }

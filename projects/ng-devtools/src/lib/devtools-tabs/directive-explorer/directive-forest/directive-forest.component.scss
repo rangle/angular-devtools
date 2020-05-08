@@ -2,9 +2,11 @@
   width: 100%;
   height: 100%;
   overflow: auto;
+  display: block;
+  background-color: var(--ngd-directive-explorer-background);
 
   .tree-node {
-    color: #111;
+    color: var(--ngd-component-label-color);
     padding-top: 4px;
     padding-bottom: 4px;
     position: relative;
@@ -34,21 +36,21 @@
     }
 
     &:hover {
-      background-color: #d4e7ff;
+      background-color: var(--ngd-component-label-hover-background);
       cursor: pointer;
     }
 
     &.matched {
-      background-color: #b298e4;
-      color: #fff;
+      background-color: var(--ngd-component-label-matched-background);
+      color: var(--ngd-component-label-matched-color);
 
       &:hover {
-        background-color: #8463be;
+        background-color: var(--ngd-component-label-matched-hover-background);
       }
 
       &.selected {
-        background-color: #6f56bb;
-        color: #fcd736;
+        background-color: var(--ngd-component-label-matched-selected-background);
+        color: var(--ngd-component-label-matched-selected-color);
       }
 
       .dir-names {
@@ -62,20 +64,20 @@
 
     &.selected,
     &.highlighted {
-      background-color: #92bdff;
+      background-color: var(--ngd-component-label-matched-highlighted-background);
     }
   }
 }
 
 @keyframes appear {
   0% {
-    background-color: #fff;
+    background-color: var(--ngd-component-new-label-animation-start);
   }
   50% {
-    background-color: #fcd736;
+    background-color: var(--ngd-component-new-label-animation-mid);
   }
   100% {
-    background-color: #fff;
+    background-color: var(--ngd-component-new-label-animation-end);
   }
 }
 
@@ -99,7 +101,7 @@
 
   .filter-input {
     border: none;
-    background: rgba(0, 0, 0, 0.003);
+    background-color: var(--ngd-component-filter-input-background);
     box-shadow: inset 0 -2px 1px rgba(0, 0, 0, 0.03);
     width: 100%;
     font-size: 20px;
@@ -123,7 +125,7 @@
 
 .angular-element {
   content: '';
-  color: blue;
+  color: var(--ngd-element-label-color);
 
   &::before {
     content: '<';

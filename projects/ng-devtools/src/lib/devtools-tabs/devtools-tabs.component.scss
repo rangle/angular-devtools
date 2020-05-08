@@ -56,13 +56,14 @@ mat-tab-group {
     }
   }
 }
+
 #app-angular-version {
   position: absolute;
   top: 8px;
   right: 10px;
   font-size: 11px;
   font-weight: bold;
-  color: #5128a5;
+  color: var(--ngd-version-color);
 }
 
 ::ng-deep {
@@ -72,6 +73,7 @@ mat-tab-group {
 
   .mat-tab-header {
     height: 30px;
+    background-color: var(--ngd-header-background);
   }
 
   .mat-tab-label-container {

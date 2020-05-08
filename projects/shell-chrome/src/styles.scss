@@ -1,7 +1,7 @@
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 
 html {
-  background-color: white;
+  background-color: var(--ngd-background);
 }
 
 body,
@@ -9,7 +9,7 @@ html {
   padding: 0;
   margin: 0;
   height: 100%;
-  color: #111111;
+  color: var(--ngd-color);
   line-height: 1.4em;
   font-weight: 300;
   font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;

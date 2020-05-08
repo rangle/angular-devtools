@@ -36,20 +36,20 @@
   margin: 5px 5px 5px 15px;
   mat-tree-node {
     .name {
-      color: #b82519;
+      color: var(--ngd-property-name-color);
     }
   }
 }
 
 .property-list mat-tree-node.disabled .name,
 .disabled {
-  color: #333;
+  color: var(--ngd-property-name-disabled-color);
 }
 
 .arrow {
   font-family: monospace;
   font-size: 7px;
-  color: #6e6e6e;
+  color: var(--ngd-property-arrow-color);
 }
 
 :host ::ng-deep .mat-tree-node,

@@ -59,4 +59,8 @@ export class DevToolsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this._interval$.unsubscribe();
   }
+
+  get theme(): 'light' | 'dark' {
+    return 'dark';
+  }
 }

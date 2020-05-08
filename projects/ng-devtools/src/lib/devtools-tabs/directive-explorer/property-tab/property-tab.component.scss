@@ -2,3 +2,9 @@ ng-property-view-body {
   width: 100%;
   overflow: auto;
 }
+
+:host {
+  background-color: var(--ngd-property-explorer-background);
+  display: block;
+  height: 100%;
+}
