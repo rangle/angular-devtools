@@ -53,9 +53,9 @@
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "github:angular/angular-devkit-build-angular-builds#4aa5d8e78212c71ef269229104072edb74dda784",
+    "@angular-devkit/build-angular": "github:angular/angular-devkit-build-angular-builds#5228f6aececf0e16459808e84cfef43aa45c01a5",
     "@angular-devkit/build-ng-packagr": "~0.1000.0",
-    "@angular/cli": "github:angular/cli-builds#6b4c72f40df06fa1e6dff91348a3c25a0c42e4d6",
+    "@angular/cli": "github:angular/cli-builds#d0cd6b2a35405ba1007e0a4c172746a2575836f3",
     "@angular/compiler-cli": "github:angular/compiler-cli-builds#2850d413fc898cd454852482747cf1d7ac94df97",
     "@angular/elements": "github:angular/elements-builds#cb20e3a8a427dbb5750aaf038972df01312f879d",
     "@angular/language-service": "github:angular/language-service-builds#47ebd2797fb7b5b85055b2c266cf84a590aedfa3",
