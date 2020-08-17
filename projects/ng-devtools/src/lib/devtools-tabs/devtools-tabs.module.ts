@@ -5,6 +5,7 @@ import { DevToolsTabsComponent } from './devtools-tabs.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 
+import { ClipboardModule } from '@angular/cdk/clipboard';
 import { DirectiveExplorerModule } from './directive-explorer/directive-explorer.module';
 import { ProfilerModule } from './profiler/profiler.module';
 import { MatMenuModule } from '@angular/material/menu';
@@ -19,6 +20,7 @@ import { TabUpdate } from './tab-update';
     MatIconModule,
     DirectiveExplorerModule,
     ProfilerModule,
+    ClipboardModule,
     CommonModule,
     MatMenuModule,
     MatButtonModule,
