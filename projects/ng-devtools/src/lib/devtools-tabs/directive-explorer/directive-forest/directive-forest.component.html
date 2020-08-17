@@ -31,6 +31,21 @@
           {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
         </mat-icon>
       </button>
+      <span *ngIf="node.directives" class="dir-icon">
+        <mat-icon class="mat-icon-rtl-mirror" color="accent">
+          router
+        </mat-icon>
+      </span>
+      <span *ngIf="!node.directives && !isElement(node)" class="component-icon">
+        <mat-icon class="mat-icon-rtl-mirror">
+          copyright
+        </mat-icon>
+      </span>
+      <span *ngIf="!node.directives && isElement(node)" class="element-icon">
+        <mat-icon class="mat-icon-rtl-mirror">
+          verified_user
+        </mat-icon>
+      </span>
       <span class="element-name" [class.angular-element]="isElement(node)">{{ node.name }}</span>
       <span *ngIf="node.directives" class="dir-names">[{{ node.directives }}]</span>
       <span class="console-reference" *ngIf="isSelected(node)"> == $ng0 </span>
