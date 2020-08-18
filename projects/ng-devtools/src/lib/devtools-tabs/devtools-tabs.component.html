@@ -47,11 +47,8 @@
 
 <section *ngIf="angularVersion" id="app-angular-version">
   Angular version:
-    <span id="app-angular-version-number" [cdkCopyToClipboard]="angularVersion">
+    <span id="version-number">
       {{ angularVersion }}
-      <!-- <mat-icon>
-        content_copy
-      </mat-icon> -->
     </span>
   <ng-container *ngIf="latestSHA; let sha"> | DevTools SHA: {{ sha }} </ng-container>
 </section>

@@ -24,11 +24,17 @@ mat-tab-group {
   right: 10px;
   font-size: 11px;
   font-weight: bold;
+  z-index: 999;
 }
 
-#app-angular-version-number {
+#version-number {
   color: #3f51b5;
-  cursor: pointer;
+  cursor: text;
+  -moz-user-select: text;
+  -khtml-user-select: text;
+  -webkit-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
 }
 
 ::ng-deep {
@@ -86,7 +92,7 @@ mat-tab-group {
 }
 
 :host-context(.dark-theme) {
-  #app-angular-version-number {
+  #version-number {
     color: #F9CB9C;
   }
 }
