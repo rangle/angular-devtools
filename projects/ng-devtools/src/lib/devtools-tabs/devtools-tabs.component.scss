@@ -96,3 +96,7 @@ mat-tab-group {
     color: #F9CB9C;
   }
 }
+
+::ng-deep body.dark-theme .menu-toggle-button {
+  color: white;
+}
