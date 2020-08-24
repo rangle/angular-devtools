@@ -85,8 +85,9 @@ export class FlamegraphVisualizerComponent {
     return `${data.data.name} ${data.data.value}ms`;
   }
 
-  updateView(event: MatCheckboxChange): void {
-    this._showChangeDetection = event.checked;
+  @Input() set changeDetection(changeDetection: MatCheckboxChange) {
+    console.log(changeDetection);
+    this._showChangeDetection = changeDetection.checked;
     this._selectFrame();
   }
 
