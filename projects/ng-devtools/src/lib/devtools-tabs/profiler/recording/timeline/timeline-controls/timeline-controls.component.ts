@@ -16,7 +16,7 @@ export class TimelineControlsComponent {
   @Input() empty: boolean;
   @Output() changeVisualizationMode = new EventEmitter<VisualizationMode>();
   @Output() exportProfile = new EventEmitter<void>();
-  @Output() toggleChangeDetection = new EventEmitter<MatCheckboxChange>();
+  @Output() toggleChangeDetection = new EventEmitter<boolean>();
 
   flameGraphMode = VisualizationMode.FlameGraph;
   treeMapMode = VisualizationMode.TreeMap;

@@ -38,7 +38,7 @@ export class TimelineComponent implements OnDestroy {
 
   visualizationMode = VisualizationMode.BarGraph;
   currentFrameIndex = -1;
-  changeDetection: MatCheckboxChange;
+  changeDetection = false;
 
   private _maxDuration = -Infinity;
   private _subscription: Subscription;

@@ -11,7 +11,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 export class TimelineVisualizerComponent {
   @Input() visualizationMode: VisualizationMode;
   @Input() frame: ProfilerFrame;
-  @Input() changeDetection: MatCheckboxChange;
+  @Input() changeDetection: boolean;
 
   cmpVisualizationModes = VisualizationMode;
 }

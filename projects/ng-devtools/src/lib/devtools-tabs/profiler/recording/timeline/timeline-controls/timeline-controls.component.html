@@ -31,7 +31,7 @@
       Source: <span class="value">{{ record?.source }}</span>
     </label>
 
-    <mat-checkbox *ngIf="visualizationMode == flameGraphMode" (change)="this.toggleChangeDetection.emit($event)">
+    <mat-checkbox *ngIf="visualizationMode == flameGraphMode" (change)="this.toggleChangeDetection.emit($event.checked)">
       Show only components with change detection
     </mat-checkbox>
   </div>

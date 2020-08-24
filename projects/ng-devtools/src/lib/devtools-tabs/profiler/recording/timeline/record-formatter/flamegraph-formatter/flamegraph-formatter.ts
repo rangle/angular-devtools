@@ -52,8 +52,6 @@ export class FlamegraphFormatter extends RecordFormatter<FlamegraphNode> {
       };
       if (showChangeDetection) {
         node.color = changeDetected ? CHANGE_DETECTION_COLOR : NO_CHANGE_DETECTION_COLOR;
-      } else {
-        node.color = getNodeColor(node.value);
       }
       timeSpent += this.addFrame(node.children, element.children, showChangeDetection);
       timeSpent += node.value;
@@ -64,22 +62,7 @@ export class FlamegraphFormatter extends RecordFormatter<FlamegraphNode> {
 }
 
 const CHANGE_DETECTION_COLOR = '#4db675';
-const NO_CHANGE_DETECTION_COLOR = 'transparent';
-
-const getNodeColor = (value: any) => {
-    switch (false) {
-      case (value > 0):
-        return '#E6EE9C'; // green
-      case (value > .01):
-        return '#FFE082'; // yellow
-      case (value > .05):
-        return '#FFCC80'; // orange
-      case (value > .1):
-        return '#EF9A9A'; // red
-      default:
-        return '#B0BEC5';
-    }
-};
+const NO_CHANGE_DETECTION_COLOR = '#FAFAFA';
 
 const didRunChangeDetection = (profile: ElementProfile) => {
   const components = profile.directives.filter((d) => d.isComponent);
