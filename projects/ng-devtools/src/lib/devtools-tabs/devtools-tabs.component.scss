@@ -24,10 +24,20 @@ mat-tab-group {
   right: 10px;
   font-size: 0.8em;
   font-weight: bold;
-  // color: #5128a5;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  z-index: 999;
+}
+
+#version-number {
+  color: #3f51b5;
+  cursor: text;
+  -moz-user-select: text;
+  -khtml-user-select: text;
+  -webkit-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
 }
 
 ::ng-deep {
@@ -80,6 +90,14 @@ mat-tab-group {
 
 .menu-toggle-button {
   font-size: 0.7em;
+  font-weight: 500;
+  color: #777;
+}
+
+:host-context(.dark-theme) {
+  #version-number {
+    color: #F9CB9C;
+  }
 }
 
 ::ng-deep body.dark-theme .menu-toggle-button {
