@@ -1,6 +1,6 @@
 :host,
 .profiler-wrapper {
-  font-size: 12px;
+  font-size: 1em;
   width: 100%;
   height: 100%;
 }
@@ -24,7 +24,7 @@
   }
   
   &.recording-button {
-    color: #bb0230;
+    color: #d83c34;
   }
 }
 
@@ -37,7 +37,8 @@
   }
 
   input, span {
-    font-size: 12px;
+    margin-top: 5px;
+    font-size: 1em;
     cursor: pointer;
   }
 }
@@ -57,4 +58,12 @@
 .visualization {
   margin: 0;
   height: 100%;
+}
+
+:host-context(.dark-theme) {
+  .profiler-control {
+    &.recording-button {
+      color: #FF625A;
+    }
+  }
 }
