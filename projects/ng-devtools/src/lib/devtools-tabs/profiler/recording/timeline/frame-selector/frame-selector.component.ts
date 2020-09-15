@@ -34,11 +34,14 @@ export class FrameSelectorComponent implements OnInit, OnDestroy {
   }
 
   @Output() move = new EventEmitter<number>();
-  @Output() selectFrames = new EventEmitter<{ start: number; end: number }>();
+  @Output() selectFrames = new EventEmitter<{ indexes: Set<number> }>();
+
   @ViewChild(CdkVirtualScrollViewport) viewport: CdkVirtualScrollViewport;
 
   startFrameIndex: number;
   endFrameIndex: number;
+  selectedFrameIndexes = new Set<number>();
+  pivotIndex: number;
 
   get itemWidth(): number {
     return ITEM_WIDTH;
@@ -47,9 +50,6 @@ export class FrameSelectorComponent implements OnInit, OnDestroy {
   private _graphData$: Observable<GraphNode[]>;
   private _graphDataSubscription: Subscription;
   private _tabUpdateSubscription: Subscription;
-  private _keydownCallback: (e: KeyboardEvent) => void;
-  private _keyupCallback: (e: KeyboardEvent) => void;
-  private _shiftDown = false;
 
   constructor(private _tabUpdate: TabUpdate) {}
 
@@ -62,8 +62,6 @@ export class FrameSelectorComponent implements OnInit, OnDestroy {
         });
       }
     });
-    window.addEventListener('keydown', (this._keydownCallback = (e: KeyboardEvent) => (this._shiftDown = e.shiftKey)));
-    window.addEventListener('keyup', (this._keyupCallback = (e: KeyboardEvent) => (this._shiftDown = e.shiftKey)));
   }
 
   ngOnDestroy(): void {
@@ -73,26 +71,88 @@ export class FrameSelectorComponent implements OnInit, OnDestroy {
     if (this._graphDataSubscription) {
       this._graphDataSubscription.unsubscribe();
     }
-    window.removeEventListener('keydown', this._keydownCallback);
-    window.removeEventListener('keyup', this._keyupCallback);
   }
 
   get selectionLabel(): string {
-    if (this.startFrameIndex !== this.endFrameIndex) {
-      return `${this.startFrameIndex + 1}-${this.endFrameIndex + 1}`;
+    if (this.startFrameIndex === this.endFrameIndex) {
+      return `${this.startFrameIndex + 1}`;
     }
-    return `${this.startFrameIndex + 1}`;
+
+    return this._smartJoinIndexLabels([...this.selectedFrameIndexes]);
   }
 
-  handleFrameSelection(idx: number): void {
-    if (!this._shiftDown) {
-      this.startFrameIndex = this.endFrameIndex = idx;
-    } else {
-      const start = Math.min(this.startFrameIndex, idx);
-      this.endFrameIndex = Math.max(this.startFrameIndex, this.endFrameIndex, idx);
-      this.startFrameIndex = start;
+  private _smartJoinIndexLabels(indexArray: number[]): string {
+    const sortedIndexes = indexArray.sort((a, b) => a - b);
+
+    const groups: number[][] = [];
+    let prev: number | null = null;
+
+    for (const index of sortedIndexes) {
+      // First iteration: create initial group and set prev variable to the first index
+      if (prev === null) {
+        groups.push([index]);
+        prev = index;
+        continue;
+      }
+
+      // If current index is consecutive with the previous, group them, otherwise start a new group
+      if (prev + 1 === index) {
+        groups[groups.length - 1].push(index);
+      } else {
+        groups.push([index]);
+      }
+
+      prev = index;
     }
-    this.selectFrames.emit({ start: this.startFrameIndex, end: this.endFrameIndex });
+
+    return groups
+      .filter((group) => group.length > 0)
+      .map((group) => (group.length === 1 ? group[0] + 1 : `${group[0] + 1}-${group[group.length - 1] + 1}`))
+      .join(', ');
+  }
+
+  next(): void {
+    this.pivotIndex = this.startFrameIndex + 1;
+    this.selectedFrameIndexes = new Set([this.pivotIndex]);
+    this.move.emit(1);
+  }
+
+  prev(): void {
+    this.pivotIndex = this.startFrameIndex - 1;
+    this.selectedFrameIndexes = new Set([this.pivotIndex]);
+    this.move.emit(-1);
+  }
+
+  handleFrameSelection(idx: number, event: MouseEvent): void {
+    const { shiftKey, ctrlKey, metaKey } = event;
+
+    if (shiftKey) {
+      const [start, end] = [Math.min(this.pivotIndex, idx), Math.max(this.pivotIndex, idx)];
+      this.selectedFrameIndexes = new Set([...Array(end - start + 1).keys()].map((i) => i + start));
+    } else if (ctrlKey || metaKey) {
+      if (this.selectedFrameIndexes.has(idx)) {
+        if (this.selectedFrameIndexes.size === 1) {
+          return; // prevent deselection when only one frame is selected
+        }
+
+        this.selectedFrameIndexes.delete(idx);
+
+        if (this.pivotIndex === idx) {
+          // case where pivot index was removed, pivot must be reassigned
+          const sortedIndexArray = [...this.selectedFrameIndexes].sort((a, b) => a - b);
+          const [start, end] = [sortedIndexArray[0], sortedIndexArray[sortedIndexArray.length - 1]];
+          this.pivotIndex = idx < start ? start : end;
+        }
+      } else {
+        this.selectedFrameIndexes.add(idx);
+        this.pivotIndex = idx;
+      }
+    } else {
+      this.selectedFrameIndexes = new Set([idx]);
+      this.pivotIndex = idx;
+    }
+
+    this.selectFrames.emit({ indexes: this.selectedFrameIndexes });
   }
 
   private _ensureVisible(index: number): void {

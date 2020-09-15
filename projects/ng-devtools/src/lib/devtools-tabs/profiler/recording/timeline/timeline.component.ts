@@ -61,14 +61,15 @@ export class TimelineComponent implements OnDestroy {
   move(value: number): void {
     const newVal = this.startFrame + value;
     if (newVal > -1 && newVal < this._allRecords.length) {
-      this.selectFrames({ start: newVal, end: newVal });
+      this.selectFrames({ indexes: new Set([newVal]) });
     }
   }
 
-  selectFrames(range: { start: number; end: number }): void {
-    this.startFrame = range.start;
-    this.endFrame = range.end;
-    this.frame = mergeFrames(this._allRecords.slice(range.start, range.end + 1));
+  selectFrames({ indexes }: { indexes: Set<number> }): void {
+    const sortedIndexes = [...indexes].sort((a, b) => a - b);
+    this.startFrame = sortedIndexes[0];
+    this.endFrame = sortedIndexes[sortedIndexes.length - 1];
+    this.frame = mergeFrames(sortedIndexes.map((index) => this._allRecords[index]));
   }
 
   getColorByFrameRate(framerate: number): string {
@@ -125,8 +126,6 @@ export class TimelineComponent implements OnDestroy {
     const backgroundColor = this.getColorByFrameRate(this.estimateFrameRate(record.duration));
 
     const style = {
-      'margin-left': '1px',
-      'margin-right': '1px',
       background: `-webkit-linear-gradient(bottom, ${backgroundColor} ${colorPercentage}%, transparent ${colorPercentage}%)`,
       cursor: 'pointer',
       'min-width': '25px',
