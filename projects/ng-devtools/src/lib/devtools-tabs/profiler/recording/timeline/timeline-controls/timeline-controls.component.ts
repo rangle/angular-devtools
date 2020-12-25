@@ -13,8 +13,11 @@ export class TimelineControlsComponent {
   @Input() frameColor: string;
   @Input() visualizationMode: VisualizationMode;
   @Input() empty: boolean;
+  @Input() disableTaskInspectOptions = false;
   @Output() changeVisualizationMode = new EventEmitter<VisualizationMode>();
   @Output() exportProfile = new EventEmitter<void>();
+  @Output() inspectTaskFunction = new EventEmitter<number>();
+  @Output() inspectTaskTarget = new EventEmitter<number>();
   @Output() toggleChangeDetection = new EventEmitter<boolean>();
 
   flameGraphMode = VisualizationMode.FlameGraph;

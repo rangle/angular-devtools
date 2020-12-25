@@ -8,6 +8,7 @@ import { initializeOrGetDirectiveForestHooks } from '.';
 let inProgress = false;
 let inChangeDetection = false;
 let eventMap: Map<any, DirectiveProfile>;
+export let taskDataByFrameId: Map<number, TaskData>;
 let frameDuration = 0;
 let hooks: Partial<Hooks> = {};
 
@@ -16,6 +17,7 @@ export const start = (onFrame: (frame: ProfilerFrame) => void): void => {
     throw new Error('Recording already in progress');
   }
   eventMap = new Map<any, DirectiveProfile>();
+  taskDataByFrameId = new Map<number, TaskData>();
   inProgress = true;
   hooks = getHooks(onFrame);
   initializeOrGetDirectiveForestHooks().subscribe(hooks);
@@ -59,11 +61,11 @@ const getHooks = (onFrame: (frame: ProfilerFrame) => void) => {
       startEvent(timeStartMap, component, 'changeDetection');
       if (!inChangeDetection) {
         inChangeDetection = true;
-        const source = getChangeDetectionSource();
+        const taskData = getChangeDetectionTaskData();
         runOutsideAngular(() => {
           Promise.resolve().then(() => {
             inChangeDetection = false;
-            onFrame(flushBuffer(initializeOrGetDirectiveForestHooks(), source));
+            onFrame(flushBuffer(initializeOrGetDirectiveForestHooks(), taskData));
           });
         });
       }
@@ -190,8 +192,11 @@ const insertElementProfile = (frames: ElementProfile[], position: ElementPositio
   insertOrMerge(lastFrame, profile);
 };
 
+let idCounter = 0;
+
 const prepareInitialFrame = (source: string, duration: number) => {
   const frame: ProfilerFrame = {
+    id: idCounter++,
     source,
     duration,
     directives: [],
@@ -232,10 +237,17 @@ const prepareInitialFrame = (source: string, duration: number) => {
     node.children.forEach((n) => traverse(n, result.children));
   };
   directiveForest.forEach((n) => traverse(n));
+
   return frame;
 };
 
-const flushBuffer = (directiveForestHooks: DirectiveForestHooks, source: string = '') => {
+interface TaskData {
+  source: string;
+  target?: HTMLElement;
+  callback?: Function;
+}
+
+const flushBuffer = (directiveForestHooks: DirectiveForestHooks, taskData: TaskData = { source: '' }) => {
   const items = Array.from(eventMap.keys());
   const positions: ElementPosition[] = [];
   const positionDirective = new Map<ElementPosition, any>();
@@ -249,7 +261,9 @@ const flushBuffer = (directiveForestHooks: DirectiveForestHooks, source: string 
   });
   positions.sort(lexicographicOrder);
 
-  const result = prepareInitialFrame(source, frameDuration);
+  const result = prepareInitialFrame(taskData.source, frameDuration);
+  taskDataByFrameId.set(result.id, taskData);
+
   frameDuration = 0;
 
   positions.forEach((position) => {
@@ -260,12 +274,19 @@ const flushBuffer = (directiveForestHooks: DirectiveForestHooks, source: string 
   return result;
 };
 
-const getChangeDetectionSource = () => {
+const getChangeDetectionTaskData = () => {
   const zone = (window as any).Zone;
   if (!zone || !zone.currentTask) {
-    return '';
+    return {
+      source: '',
+    };
   }
-  return zone.currentTask.source;
+
+  return {
+    target: zone.currentTask.target,
+    source: zone.currentTask.source,
+    callback: zone.currentTask.callback,
+  };
 };
 
 const lexicographicOrder = (a: ElementPosition, b: ElementPosition) => {

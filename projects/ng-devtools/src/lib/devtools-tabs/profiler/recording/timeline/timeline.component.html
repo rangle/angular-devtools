@@ -12,8 +12,11 @@
     [frameColor]="getColorByFrameRate(estimateFrameRate(frame?.duration))"
     [estimatedFrameRate]="estimateFrameRate(frame?.duration)"
     [visualizationMode]="visualizationMode"
+    [disableTaskInspectOptions]="disableTaskInspectOptions"
     (changeVisualizationMode)="visualizationMode = $event"
     (exportProfile)="exportProfile.emit($event)"
+    (inspectTaskFunction)="inspectTaskFunction.emit($event)"
+    (inspectTaskTarget)="inspectTaskTarget.emit($event)"
     (toggleChangeDetection)="changeDetection = $event"
   ></ng-timeline-controls>
 

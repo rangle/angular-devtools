@@ -59,3 +59,11 @@
     color: #54c9bd;
   }
 }
+
+.action-button {
+  color: #c19724;
+  &:hover {
+    color: #4da1ff;
+    cursor: pointer;
+  }
+}

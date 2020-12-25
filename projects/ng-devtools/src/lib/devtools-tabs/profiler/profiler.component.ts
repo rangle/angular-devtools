@@ -4,6 +4,7 @@ import { FileApiService } from '../../file-api-service';
 import { MatDialog } from '@angular/material/dialog';
 import { ProfilerImportDialogComponent } from './profiler-import-dialog/profiler-import-dialog.component';
 import { Subject, Subscription } from 'rxjs';
+import { ApplicationOperations } from '../../application-operations';
 
 type State = 'idle' | 'recording' | 'visualizing';
 
@@ -18,6 +19,7 @@ const PROFILER_VERSION = 1;
 export class ProfilerComponent implements OnInit, OnDestroy {
   state: State = 'idle';
   stream = new Subject<ProfilerFrame[]>();
+  disableTaskInspectOptions = false;
 
   private _fileUploadSubscription: Subscription;
 
@@ -27,11 +29,13 @@ export class ProfilerComponent implements OnInit, OnDestroy {
   constructor(
     private _fileApiService: FileApiService,
     private _messageBus: MessageBus<Events>,
+    public applicationOperations: ApplicationOperations,
     public dialog: MatDialog
   ) {}
 
   startRecording(): void {
     this.state = 'recording';
+    this.disableTaskInspectOptions = false;
     this._messageBus.emit('startProfiling');
   }
 
@@ -76,12 +80,14 @@ export class ProfilerComponent implements OnInit, OnDestroy {
           if (result) {
             this.state = 'visualizing';
             this._buffer = importedFile.buffer;
+            this.disableTaskInspectOptions = true;
             setTimeout(() => this.stream.next(importedFile.buffer));
           }
         });
       } else {
         this.state = 'visualizing';
         this._buffer = importedFile.buffer;
+        this.disableTaskInspectOptions = true;
         setTimeout(() => this.stream.next(importedFile.buffer));
       }
     });

@@ -34,7 +34,10 @@ export class TimelineComponent implements OnDestroy {
       },
     });
   }
+  @Input() disableTaskInspectOptions = false;
   @Output() exportProfile = new EventEmitter<void>();
+  @Output() inspectTaskFunction = new EventEmitter<number>();
+  @Output() inspectTaskTarget = new EventEmitter<number>();
 
   visualizationMode = VisualizationMode.BarGraph;
   startFrame = -1;

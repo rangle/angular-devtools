@@ -1,5 +1,9 @@
-import { findNodeFromSerializedPosition } from 'ng-devtools-backend';
-import { buildDirectiveForest, queryDirectiveForest } from '../../../ng-devtools-backend/src/lib/component-tree';
+import {
+  findNodeFromSerializedPosition,
+  buildDirectiveForest,
+  queryDirectiveForest,
+  taskDataByFrameId,
+} from 'ng-devtools-backend';
 
 export const initializeExtendedWindowOperations = () => {
   extendWindowOperations(window, { inspectedApplication: chromeWindowExtensions });
@@ -16,6 +20,16 @@ const extendWindowOperations = <T>(target, classImpl: T) => {
 };
 
 const chromeWindowExtensions = {
+  getProfileFrameTarget: (frameId: string) => {
+    const taskData = taskDataByFrameId.get(parseInt(frameId, 10));
+    console.log('Target:', taskData?.target);
+    return taskData?.target;
+  },
+  getProfileFrameCallback: (frameId: string) => {
+    const taskData = taskDataByFrameId.get(parseInt(frameId, 10));
+    console.log('Callback:', taskData?.callback);
+    return taskData?.callback;
+  },
   findConstructorByPosition: (serializedId: string): Element | undefined => {
     const node = findNodeFromSerializedPosition(serializedId);
     if (node === null) {

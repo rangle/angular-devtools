@@ -13,26 +13,43 @@
     </mat-select>
   </mat-form-field>
 
-  <div class="details" 
+  <div
+    class="details"
     [class.flame-details]="visualizationMode == flameGraphMode"
-    [class.bar-details]="visualizationMode == barGraphMode">
+    [class.bar-details]="visualizationMode == barGraphMode"
+  >
     <label *ngIf="estimatedFrameRate >= 60 && record">
       Time spent: <span class="value">{{ record?.duration | number }} ms</span>
     </label>
-  
+
     <label [style.color]="frameColor" *ngIf="estimatedFrameRate < 60 && record">
       Time spent: <span class="value">{{ record?.duration | number }} ms</span>
     </label>
-  
+
     <label [style.color]="frameColor" *ngIf="estimatedFrameRate < 60 && record">
       Frame rate: <span class="value">{{ estimatedFrameRate }} fps</span>
     </label>
-  
+
     <label *ngIf="record?.source && record">
       Source: <span class="value">{{ record?.source }}</span>
     </label>
 
-    <mat-checkbox *ngIf="visualizationMode == flameGraphMode" (change)="this.toggleChangeDetection.emit($event.checked)">
+    <div *ngIf="!disableTaskInspectOptions && record?.id" (click)="inspectTaskFunction.emit(record!.id)">
+      <span class="action-button">
+        View Task Callback
+      </span>
+    </div>
+
+    <div *ngIf="!disableTaskInspectOptions && record?.id" (click)="inspectTaskTarget.emit(record!.id)">
+      <span class="action-button">
+        View Task Target
+      </span>
+    </div>
+
+    <mat-checkbox
+      *ngIf="visualizationMode == flameGraphMode"
+      (change)="this.toggleChangeDetection.emit($event.checked)"
+    >
       Show only change detection
     </mat-checkbox>
   </div>
