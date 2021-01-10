@@ -60,6 +60,8 @@ export class DirectiveExplorerComponent implements OnInit {
 
   parents: FlatNode[] | null = null;
 
+  highlightedNode: FlatNode | null | undefined = null;
+
   @ViewChild(DirectiveForestComponent) directiveForest: DirectiveForestComponent;
 
   constructor(
@@ -106,6 +108,16 @@ export class DirectiveExplorerComponent implements OnInit {
     });
 
     this._messageBus.on('componentTreeDirty', () => this.refresh());
+
+    this._messageBus.on('highlightComponent', (componentId: number) => {
+      this.highlightedNode = this.directiveForest.dataSource.data.find(
+        (node) => node.original.component?.id === componentId
+      );
+    });
+
+    this._messageBus.on('removeComponentHighlight', () => {
+      this.highlightedNode = null;
+    });
   }
 
   refresh(): void {
@@ -134,6 +146,8 @@ export class DirectiveExplorerComponent implements OnInit {
   }
 
   highlight(node: FlatNode): void {
+    this.highlightedNode = node;
+
     if (!node.original.component) {
       return;
     }
@@ -141,6 +155,7 @@ export class DirectiveExplorerComponent implements OnInit {
   }
 
   unhighlight(): void {
+    this.highlightedNode = null;
     this._messageBus.emit('removeHighlightOverlay');
   }
 
@@ -175,6 +190,7 @@ export class DirectiveExplorerComponent implements OnInit {
   }
 
   highlightComponent(position: ElementPosition): void {
+    this.highlightedNode = null;
     this._messageBus.emit('createHighlightOverlay', [position]);
   }
 

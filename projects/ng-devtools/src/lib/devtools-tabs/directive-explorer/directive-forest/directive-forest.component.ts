@@ -1,6 +1,5 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   EventEmitter,
   HostListener,
@@ -34,6 +33,14 @@ export class DirectiveForestComponent implements OnInit, OnDestroy {
     }
   }
   @Input() currentSelectedElement: IndexedNode;
+  @Input() set highlightedNode(node: FlatNode | null | undefined) {
+    this._highlightedNode = node;
+
+    if (node) {
+      this._ensureVisible(node);
+    }
+  }
+  private _highlightedNode: FlatNode | null | undefined = null;
 
   @Output() selectNode = new EventEmitter<IndexedNode | null>();
   @Output() selectDomElement = new EventEmitter<IndexedNode>();
@@ -50,13 +57,7 @@ export class DirectiveForestComponent implements OnInit, OnDestroy {
   selectedNode: FlatNode | null = null;
   parents: FlatNode[];
 
-  private _highlightIDinTreeFromElement: number | null = null;
   private _tabUpdateSubscription: Subscription;
-
-  set highlightIDinTreeFromElement(id: number | null) {
-    this._highlightIDinTreeFromElement = id;
-    this._cdr.markForCheck();
-  }
 
   readonly treeControl = new FlatTreeControl<FlatNode>(
     (node) => node.level,
@@ -67,11 +68,7 @@ export class DirectiveForestComponent implements OnInit, OnDestroy {
 
   private _initialized = false;
 
-  constructor(
-    private _tabUpdate: TabUpdate,
-    private _messageBus: MessageBus<Events>,
-    private _cdr: ChangeDetectorRef
-  ) {}
+  constructor(private _tabUpdate: TabUpdate, private _messageBus: MessageBus<Events>) {}
 
   ngOnInit(): void {
     this.subscribeToInspectorEvents();
@@ -96,14 +93,6 @@ export class DirectiveForestComponent implements OnInit, OnDestroy {
       this.selectNodeByComponentId(id);
       this.toggleInspector.emit();
     });
-
-    this._messageBus.on('highlightComponent', (id: number) => {
-      this.highlightIDinTreeFromElement = id;
-    });
-
-    this._messageBus.on('removeComponentHighlight', () => {
-      this.highlightIDinTreeFromElement = null;
-    });
   }
 
   selectNodeByComponentId(id: number): void {
@@ -124,7 +113,10 @@ export class DirectiveForestComponent implements OnInit, OnDestroy {
 
   selectAndEnsureVisible(node: FlatNode): void {
     this.select(node);
+    this._ensureVisible(node);
+  }
 
+  private _ensureVisible(node: FlatNode): void {
     const scrollParent = this.viewport.elementRef.nativeElement;
     // The top most point we see an element
     const top = scrollParent.scrollTop;
@@ -306,7 +298,7 @@ export class DirectiveForestComponent implements OnInit, OnDestroy {
     }
   }
 
-  _findMatchedNodes(): number[] {
+  private _findMatchedNodes(): number[] {
     const result: number[] = [];
     for (let i = 0; i < this.dataSource.data.length; i++) {
       if (this.isMatched(this.dataSource.data[i])) {
@@ -351,7 +343,6 @@ export class DirectiveForestComponent implements OnInit, OnDestroy {
   }
 
   highlightNode(position: ElementPosition): void {
-    this._highlightIDinTreeFromElement = null;
     this.highlightComponent.emit(position);
   }
 
@@ -360,7 +351,7 @@ export class DirectiveForestComponent implements OnInit, OnDestroy {
   }
 
   isHighlighted(node: FlatNode): boolean {
-    return !!this._highlightIDinTreeFromElement && this._highlightIDinTreeFromElement === node.original.component?.id;
+    return this._highlightedNode === node;
   }
 
   isElement(node: FlatNode): boolean | null {
