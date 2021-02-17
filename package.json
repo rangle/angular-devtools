@@ -30,7 +30,6 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn prettier:fix"
     }
   },
   "private": true,

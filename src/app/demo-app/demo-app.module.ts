@@ -1,5 +1,5 @@
 import { NgModule, Injector, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { DemoAppComponent } from './demo-app.component';
+import { DemoAppComponent, ComponentPortalExample } from './demo-app.component';
 import { RouterModule } from '@angular/router';
 
 import { initializeMessageBus } from 'ng-devtools-backend';
@@ -7,12 +7,16 @@ import { ZippyComponent } from './zippy/zippy.component';
 import { ZoneUnawareIFrameMessageBus } from 'src/zone-unaware-iframe-message-bus';
 import { HeavyComponent } from './heavy/heavy.component';
 import { createCustomElement } from '@angular/elements';
+import { PortalModule } from '@angular/cdk/portal';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
-  declarations: [DemoAppComponent, HeavyComponent],
+  declarations: [DemoAppComponent, HeavyComponent, ComponentPortalExample],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   exports: [DemoAppComponent],
   imports: [
+    PortalModule,
+    MatButtonModule,
     RouterModule.forChild([
       {
         path: '',

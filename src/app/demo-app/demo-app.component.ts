@@ -1,4 +1,6 @@
-import { Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ComponentPortal, DomPortal, DomPortalOutlet, Portal, TemplatePortal } from '@angular/cdk/portal';
+import { ApplicationRef, ChangeDetectorRef, Component, ComponentFactoryResolver, ElementRef, Injector, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ZippyComponent } from './zippy/zippy.component';
 
 @Component({
@@ -16,4 +18,34 @@ export class DemoAppComponent {
     }
     return '▼ Click to collapse';
   }
+
+  @ViewChild('templatePortalContent') templatePortalContent: TemplateRef<unknown>;
+  @ViewChild('domPortalContent') domPortalContent: ElementRef<HTMLElement>;
+
+  selectedPortal: Portal<any>;
+  componentPortal: ComponentPortal<ComponentPortalExample>;
+  templatePortal: TemplatePortal<any>;
+  domPortal: DomPortal<any>;
+
+  constructor(private _appRef: ApplicationRef,
+    private _componentFactoryResolver: ComponentFactoryResolver,
+    public _elementRef: ElementRef,
+    private _injector: Injector,
+    private _viewContainerRef: ViewContainerRef) {}
+
+  ngAfterViewInit() {
+    // const element = document.querySelector('#dynamic')!;
+    // const portalHost = new DomPortalOutlet(
+    //   element, this._componentFactoryResolver, this._appRef, this._injector);
+    // const examplePortal = new ComponentPortal(ComponentPortalExample, this._viewContainerRef);
+    // setTimeout(() => portalHost.attach(examplePortal));
+  }
 }
+
+@Component({
+  selector: 'component-portal-example',
+  template: `
+    <app-heavy></app-heavy>
+  `
+})
+export class ComponentPortalExample { }

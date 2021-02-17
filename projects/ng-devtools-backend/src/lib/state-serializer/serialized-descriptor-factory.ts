@@ -1,5 +1,5 @@
 import { Descriptor, NestedProp, PropType } from 'protocol';
-import { METADATA_PROPERTY_NAME } from '../lview-transform';
+import { METADATA_PROPERTY_NAME } from '../directive-forest';
 
 export interface CompositeType {
   type: Extract<PropType, PropType.Array | PropType.Object>;

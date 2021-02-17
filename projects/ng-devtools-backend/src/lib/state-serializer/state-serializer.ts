@@ -5,7 +5,7 @@ import {
   createShallowSerializedDescriptor,
   PropertyData,
 } from './serialized-descriptor-factory';
-import { METADATA_PROPERTY_NAME } from '../lview-transform';
+import { METADATA_PROPERTY_NAME } from '../directive-forest';
 
 const ignoreList = new Set([METADATA_PROPERTY_NAME, '__ngSimpleChanges__']);
 

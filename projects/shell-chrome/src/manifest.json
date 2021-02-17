@@ -3,8 +3,8 @@
   "short_name": "Angular DevTools Alpha",
   "name": "Angular Developer Tools Alpha",
   "description": "Extends the Developer Tools, adding tools for debugging and profiling Angular applications.",
-  "version": "1.0.12",
-  "version_name": "1.0.12",
+  "version": "1.0.13",
+  "version_name": "1.0.13",
   "minimum_chrome_version": "50",
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "icons": {
@@ -14,21 +14,41 @@
     "default_popup": "popups/disabled.html"
   },
   "devtools_page": "devtools.html",
-  "web_accessible_resources": ["backend.js", "runtime.js", "devtools.html"],
+  "web_accessible_resources": [
+    "backend.js",
+    "runtime.js",
+    "devtools.html"
+  ],
   "background": {
-    "scripts": ["background.js", "runtime.js"],
+    "scripts": [
+      "background.js",
+      "runtime.js"
+    ],
     "persistent": false
   },
-  "permissions": ["activeTab", "http://*/*", "https://*/*", "file:///*"],
+  "permissions": [
+    "activeTab",
+    "http://*/*",
+    "https://*/*",
+    "file:///*"
+  ],
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["runtime.js"],
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "runtime.js"
+      ],
       "run_at": "document_start"
     },
     {
-      "matches": ["<all_urls>"],
-      "js": ["ng-validate.js"],
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "ng-validate.js"
+      ],
       "run_at": "document_idle"
     }
   ]

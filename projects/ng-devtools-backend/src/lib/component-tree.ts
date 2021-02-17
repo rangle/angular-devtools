@@ -9,7 +9,7 @@ import {
   PropertyQueryTypes,
   UpdatedStateData,
 } from 'protocol';
-import { buildDirectiveTree, getLViewFromDirectiveOrElementInstance } from './lview-transform';
+import { buildDirectiveTree, getLViewFromDirectiveOrElementInstance } from './directive-forest';
 
 const ngDebug = () => (window as any).ng;
 
@@ -112,13 +112,12 @@ const getRootLViewsHelper = (element: Element, rootLViews = new Set<any>()): Set
 // app. We get these by traversing the DOM starting from the root DOM
 // element and stopping once we hit a node which is not HTMLElement or
 // has lView data associated with it.
-const getRootLViews = (element: Element): Set<any> => {
-  const roots = element.querySelectorAll('[ng-version]');
-  return getRootLViewsHelper(element, new Set(Array.from(roots).map(getLViewFromDirectiveOrElementInstance)));
-};
-
 export const buildDirectiveForest = (): ComponentTreeNode[] => {
-  const roots = getRootLViews(document.documentElement);
+  const elements = document.documentElement.querySelectorAll('[ng-version]');
+  const roots = getRootLViewsHelper(
+    document.documentElement,
+    new Set(Array.from(elements).map(getLViewFromDirectiveOrElementInstance))
+  );
   return Array.prototype.concat.apply([], [...roots].map(buildDirectiveTree));
 };
 
