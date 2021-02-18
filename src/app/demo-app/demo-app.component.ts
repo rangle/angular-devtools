@@ -34,11 +34,11 @@ export class DemoAppComponent {
     private _viewContainerRef: ViewContainerRef) {}
 
   ngAfterViewInit() {
-    // const element = document.querySelector('#dynamic')!;
-    // const portalHost = new DomPortalOutlet(
-    //   element, this._componentFactoryResolver, this._appRef, this._injector);
-    // const examplePortal = new ComponentPortal(ComponentPortalExample, this._viewContainerRef);
-    // setTimeout(() => portalHost.attach(examplePortal));
+    const element = document.querySelector('#dynamic')!;
+    const portalHost = new DomPortalOutlet(
+      element, this._componentFactoryResolver, this._appRef, this._injector);
+    const examplePortal = new ComponentPortal(ComponentPortalExample, this._viewContainerRef);
+    setTimeout(() => portalHost.attach(examplePortal));
   }
 }
 
