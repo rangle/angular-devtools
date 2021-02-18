@@ -13,6 +13,16 @@ interface DebugNode {
   native: Node | HTMLElement;
 }
 
+const findLParent = (debug, node) => {
+  const views = debug.childViews ?? debug.views;
+  for (const view of views) {
+    if (view.host === node.native) {
+      return view;
+    }
+  }
+  return debug;
+};
+
 const getElementName = (node: Node | HTMLElement) => (node ?? { nodeName: '' }).nodeName.toLowerCase();
 export class DebugNodeTreeBuilder {
   supports(lViewOrLContainer: any) {
@@ -58,8 +68,11 @@ export class DebugNodeTreeBuilder {
       element: getElementName(node.native),
       nativeElement: node.native,
     };
+    if (result.element === '#comment' && result.directives?.[0].name === 'NgForOf') {
+      // debugger;
+    }
     if ((result.directives.length || result.component) && !result.children.length && !node.children.length) {
-      result.children = this._extractLNodeChildren(debug);
+      result.children = this._extractLNodeChildren(findLParent(debug, node));
     }
     return result;
   }
@@ -95,22 +108,10 @@ export class DebugNodeTreeBuilder {
     return this._extractLViewChildren(debug);
   }
 
-  private _extractFromRootView(debug: any) {
-    const nodes: ComponentTreeNode[] = [];
-    let child = debug.childHead;
-    while (child) {
-      if (!isComponentLContainer(debug) && child.directives.length) {
-        nodes.push(...this.build({ debug: child }));
-      }
-      child = child.next;
-    }
-    return nodes;
-  }
-
   private _extractLContentChildren(debug: any) {
     const result: ComponentTreeNode[] = [];
     for (const view of debug.views) {
-      result.push(...this._extractFromRootView(view));
+      result.push(...this.build({ debug: view}));
     }
     return result;
   }

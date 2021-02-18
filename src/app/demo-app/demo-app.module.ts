@@ -9,12 +9,14 @@ import { HeavyComponent } from './heavy/heavy.component';
 import { createCustomElement } from '@angular/elements';
 import { PortalModule } from '@angular/cdk/portal';
 import { MatButtonModule } from '@angular/material/button';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [DemoAppComponent, HeavyComponent, ComponentPortalExample],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   exports: [DemoAppComponent],
   imports: [
+    CommonModule,
     PortalModule,
     MatButtonModule,
     RouterModule.forChild([

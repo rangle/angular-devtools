@@ -11,6 +11,7 @@ import { ZippyComponent } from './zippy/zippy.component';
 export class DemoAppComponent {
   @ViewChild(ZippyComponent) zippy: ZippyComponent;
   @ViewChild('elementReference') elementRef: ElementRef;
+  bars = [];
 
   getTitle(): '► Click to expand' | '▼ Click to collapse' {
     if (!this.zippy || !this.zippy.visible) {
@@ -38,7 +39,7 @@ export class DemoAppComponent {
     const portalHost = new DomPortalOutlet(
       element, this._componentFactoryResolver, this._appRef, this._injector);
     const examplePortal = new ComponentPortal(ComponentPortalExample, this._viewContainerRef);
-    setTimeout(() => portalHost.attach(examplePortal));
+    // setTimeout(() => portalHost.attach(examplePortal));
   }
 }
 

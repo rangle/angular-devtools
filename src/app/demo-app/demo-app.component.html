@@ -7,5 +7,10 @@
 </app-heavy>
 
 
-<!-- <app-zippy [title]="getTitle()">This is my content</app-zippy>
-<div #elementReference>HTMLElement</div> -->
+<app-zippy [title]="getTitle()">This is my content</app-zippy>
+<div #elementReference>HTMLElement</div>
+
+<div *ngIf="true">
+  <div *ngIf="true"></div>
+</div>
+<div *ngFor="let bar of bars"></div>
