@@ -3,6 +3,14 @@ import { getDirectiveName } from '../highlighter';
 import { isCustomElement } from '../utils';
 import { componentMetadata } from '../utils';
 
+
+// ng.__ON_CHANGE_DETECTION_START__(callback(component));
+// ng.__ON_CHANGE_DETECTION_END__(callback(component));
+
+// if (ngDevMode && ng.__ON_CHANGE_DETECTION_START__) {
+//   ng.__ON_CHANGE_DETECTION_START__(...);
+// }
+
 const isComponentLContainer = (debug: any) => !!debug.node && !!debug.node.debug;
 
 interface DebugNode {
@@ -48,13 +56,23 @@ export class DebugNodeTreeBuilder {
     return result;
   }
 
+  // <div *ngIf="true">
+  // </div>
+  // <div>
+  //   <bar></bar>
+  // </div>
+  //
+  // [
+  //   { element: 'div', directives: [NgForOf] },
+  //   { element: 'bar', directives: [Bar] }
+  // ]
   private _extractFromDebugNodes(debug: any, nodes: DebugNode[]) {
     const result: ComponentTreeNode[] = [];
     for (const node of nodes) {
-      if (!node.factories.length) {
-        result.push(...this._extractFromDebugNodes(node.lView, node.children));
-      } else {
+      if (node.factories.length) {
         result.push(this._extractFromDebugNode(node.lView.debug, node));
+      } else {
+        result.push(...this._extractFromDebugNodes(node.lView, node.children));
       }
     }
     return result;
@@ -68,9 +86,6 @@ export class DebugNodeTreeBuilder {
       element: getElementName(node.native),
       nativeElement: node.native,
     };
-    if (result.element === '#comment' && result.directives?.[0].name === 'NgForOf') {
-      // debugger;
-    }
     if ((result.directives.length || result.component) && !result.children.length && !node.children.length) {
       result.children = this._extractLNodeChildren(findLParent(debug, node));
     }
@@ -103,12 +118,12 @@ export class DebugNodeTreeBuilder {
 
   private _extractLNodeChildren(debug: any): ComponentTreeNode[] {
     if (debug.views) {
-      return this._extractLContentChildren(debug);
+      return this._extractLContainerChildren(debug);
     }
     return this._extractLViewChildren(debug);
   }
 
-  private _extractLContentChildren(debug: any) {
+  private _extractLContainerChildren(debug: any) {
     const result: ComponentTreeNode[] = [];
     for (const view of debug.views) {
       result.push(...this.build({ debug: view}));

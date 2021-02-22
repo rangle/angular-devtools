@@ -39,14 +39,14 @@ export class DemoAppComponent {
     const portalHost = new DomPortalOutlet(
       element, this._componentFactoryResolver, this._appRef, this._injector);
     const examplePortal = new ComponentPortal(ComponentPortalExample, this._viewContainerRef);
-    // setTimeout(() => portalHost.attach(examplePortal));
+    setTimeout(() => portalHost.attach(examplePortal));
   }
 }
 
 @Component({
   selector: 'component-portal-example',
   template: `
-    <app-heavy></app-heavy>
+    Dynamic content <app-heavy></app-heavy>
   `
 })
 export class ComponentPortalExample { }
