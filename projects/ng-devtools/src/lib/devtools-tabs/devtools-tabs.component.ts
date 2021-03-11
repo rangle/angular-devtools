@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Events, MessageBus } from 'protocol';
+import { Events, MessageBus, Route } from 'protocol';
 import { DirectiveExplorerComponent } from './directive-explorer/directive-explorer.component';
 import { ApplicationEnvironment } from '../application-environment';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
@@ -7,7 +7,6 @@ import { TabUpdate } from './tab-update';
 import { Theme, ThemeService } from '../theme-service';
 import { Subscription } from 'rxjs';
 import { MatTabNav } from '@angular/material/tabs';
-import { RouterTreeComponent } from './router-tree/router-tree.component';
 
 @Component({
   selector: 'ng-devtools-tabs',
@@ -18,9 +17,7 @@ export class DevToolsTabsComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() angularVersion: string | undefined = undefined;
   @ViewChild(DirectiveExplorerComponent) directiveExplorer: DirectiveExplorerComponent;
   @ViewChild('navBar', { static: true }) navbar: MatTabNav;
-  @ViewChild('routerTree', { static: false }) routerTree: RouterTreeComponent;
 
-  tabs = ['Components', 'Profiler', 'Router Tree'];
   activeTab: 'Components' | 'Profiler' | 'Router Tree' = 'Components';
 
   inspectorRunning = false;
@@ -28,6 +25,8 @@ export class DevToolsTabsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private _currentThemeSubscription: Subscription;
   currentTheme: Theme;
+
+  routes: Route[] = [];
 
   constructor(
     public tabUpdate: TabUpdate,
@@ -38,6 +37,15 @@ export class DevToolsTabsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
     this._currentThemeSubscription = this.themeService.currentTheme.subscribe((theme) => (this.currentTheme = theme));
+
+    this._messageBus.on('updateRouterTree', (routes) => {
+      this.routes = routes || [];
+    });
+  }
+
+  get tabs(): string[] {
+    const alwaysShown = ['Components', 'Profiler'];
+    return this.routes.length === 0 ? alwaysShown : [...alwaysShown, 'Router Tree'];
   }
 
   ngAfterViewInit(): void {
