@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 import { trigger, style, animate, transition, stagger, query, animateChild } from '@angular/animations';
 
 interface Data {
