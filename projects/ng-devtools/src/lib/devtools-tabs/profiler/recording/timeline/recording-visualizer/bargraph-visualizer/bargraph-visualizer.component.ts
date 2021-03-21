@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { BargraphNode, BarGraphFormatter } from '../../record-formatter/bargraph-formatter';
 import { ProfilerFrame } from 'protocol';
 import { SelectedDirective, SelectedEntry } from '../timeline-visualizer.component';
-import { Theme, ThemeService } from 'projects/ng-devtools/src/lib/theme-service';
+import { Theme, ThemeService } from '../../../../../../theme-service';
 import { Subscription } from 'rxjs';
 
 @Component({

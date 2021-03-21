@@ -1,6 +1,6 @@
 import { RecordFormatter } from '../record-formatter';
 import { ElementProfile, ProfilerFrame } from 'protocol';
-import { Theme } from 'projects/ng-devtools/src/lib/theme-service';
+import { Theme } from '../../../../../../theme-service';
 
 export interface FlamegraphNode {
   value: number;

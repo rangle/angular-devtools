@@ -28,7 +28,7 @@ import { FlatNode as PropertyFlatNode } from './property-resolver/element-proper
 import { DirectiveForestComponent } from './directive-forest/directive-forest.component';
 import { constructPathOfKeysToPropertyValue } from './property-resolver/directive-property-resolver';
 import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
-import { SplitComponent } from '../../../lib/vendor/angular-split/public_api';
+import { SplitComponent } from '../../vendor/angular-split/public_api';
 
 const sameDirectives = (a: IndexedNode, b: IndexedNode) => {
   if ((a.component && !b.component) || (!a.component && b.component)) {

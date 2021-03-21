@@ -8,7 +8,7 @@ import {
 import { Color, RawData } from 'ngx-flamegraph/lib/utils';
 import { ProfilerFrame } from 'protocol';
 import { SelectedDirective, SelectedEntry } from '../timeline-visualizer.component';
-import { Theme, ThemeService } from 'projects/ng-devtools/src/lib/theme-service';
+import { Theme, ThemeService } from '../../../../../../theme-service';
 import { Subscription } from 'rxjs';
 
 export interface GraphNode {

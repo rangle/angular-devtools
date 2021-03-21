@@ -65,7 +65,7 @@ import {
   selector: 'as-split',
   exportAs: 'asSplit',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrls: [`./split.component.scss`],
+  styles: [`./split.component.scss`],
   template: ` <ng-content></ng-content>
     <ng-template ngFor [ngForOf]="displayedAreas" let-index="index" let-last="last">
       <div
