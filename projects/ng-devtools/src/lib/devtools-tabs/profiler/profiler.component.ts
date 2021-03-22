@@ -31,8 +31,13 @@ export class ProfilerComponent implements OnInit, OnDestroy {
   ) {}
 
   startRecording(): void {
-    this.state = 'recording';
-    this._messageBus.emit('startProfiling');
+    this.discardRecording();
+
+    // Wait for next frame before starting recording so that the timeline component is recreated
+    setTimeout(() => {
+      this.state = 'recording';
+      this._messageBus.emit('startProfiling');
+    });
   }
 
   stopRecording(): void {
@@ -104,8 +109,12 @@ export class ProfilerComponent implements OnInit, OnDestroy {
   }
 
   discardRecording(): void {
-    this.stream = new Subject<ProfilerFrame[]>();
     this.state = 'idle';
+    this.resetBuffer();
+  }
+
+  resetBuffer(): void {
+    this.stream = new Subject<ProfilerFrame[]>();
     this._buffer = [];
   }
 }

@@ -41,7 +41,7 @@
     </label>
 
     <mat-checkbox
-      *ngIf="visualizationMode == flameGraphMode"
+      *ngIf="record && visualizationMode === flameGraphMode"
       [checked]="changeDetection"
       (change)="this.toggleChangeDetection.emit(!changeDetection)"
     >

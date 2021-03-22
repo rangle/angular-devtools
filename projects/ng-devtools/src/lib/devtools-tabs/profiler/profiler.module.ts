@@ -10,12 +10,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { ProfilerImportDialogComponent } from './profiler-import-dialog/profiler-import-dialog.component';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [ProfilerComponent, ProfilerImportDialogComponent],
   imports: [
     CommonModule,
     MatDialogModule,
+    MatTooltipModule,
     MatIconModule,
     MatSelectModule,
     FormsModule,

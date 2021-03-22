@@ -8,15 +8,13 @@
 .mat-card {
   display: flex;
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-  height: wrap-content;
-  margin: 0 !important;
-  padding: 5px !important;
-  box-shadow: none !important;
+  padding: 5px;
   border-radius: 0;
 }
 
+$icon-size: 18px;
 .mat-icon {
-  font-size: 18px;
+  font-size: $icon-size;
 }
 
 .profiler-control {
@@ -28,8 +26,16 @@
 }
 
 .instructions {
-  margin-bottom: 0 !important;
   align-self: center;
+
+  &.idle {
+    display: inline-flex;
+    flex-direction: column;
+  }
+
+  &:not(.idle) {
+    height: $icon-size;
+  }
 
   &.hidden {
     display: none;

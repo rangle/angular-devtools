@@ -1,9 +1,10 @@
 <div class="profiler-wrapper">
-  <mat-card>
+  <mat-card [class.mat-elevation-z0]="true">
     <button
       mat-icon-button
       color="primary"
-      *ngIf="state === 'idle'"
+      matTooltip="Start recording"
+      *ngIf="state !== 'recording'"
       (click)="startRecording()"
       class="profiler-control start-recording-button"
     >
@@ -11,6 +12,7 @@
     </button>
     <button
       mat-icon-button
+      matTooltip="Stop recording"
       *ngIf="state === 'recording'"
       (click)="stopRecording()"
       class="profiler-control recording-button"
@@ -20,25 +22,38 @@
     <button
       mat-icon-button
       color="primary"
-      *ngIf="state === 'visualizing'"
-      (click)="discardRecording()"
+      matTooltip="Clear current frames"
+      *ngIf="state === 'recording'; else discardRecordingButton"
+      (click)="resetBuffer()"
       class="profiler-control discard-button"
     >
       <mat-icon> not_interested </mat-icon>
     </button>
-    <p class="instructions" [class.hidden]="state !== 'idle'">
+    <ng-template #discardRecordingButton>
+      <button
+        mat-icon-button
+        color="primary"
+        matTooltip="Exit profiler"
+        *ngIf="state === 'visualizing'"
+        (click)="discardRecording()"
+        class="profiler-control discard-button"
+      >
+        <mat-icon> not_interested </mat-icon>
+      </button>
+    </ng-template>
+    <span class="instructions idle" [class.hidden]="state !== 'idle'">
       <span> Click the play button to start a new recording, or upload a json file containing profiler data. </span>
-      <br />
       <span>
         <input type="file" (change)="importProfilerResults($event)" placeholder="Upload file" accept=".json" />
       </span>
-    </p>
-    <p class="instructions" [class.hidden]="state !== 'recording'">
-      Interact to preview change detection. Clicking stop ends this Profiler recording.
-    </p>
-    <p class="instructions" [class.hidden]="state !== 'visualizing'">
-      Click Save Profile to save your recording or click refresh to clear the current recording.
-    </p>
+    </span>
+    <span class="instructions" [class.hidden]="state !== 'recording'">
+      Click the profiling button to stop profiling. Click the clear button to remove existing profiler frames.
+    </span>
+    <span class="instructions" [class.hidden]="state !== 'visualizing'">
+      Click the profiling button to resume profiling. Click the clear button to go back to the profiler menu. Click
+      <q>Save Profile</q> to save your recording.
+    </span>
   </mat-card>
   <div id="profiler-content-wrapper">
     <div class="visualization" *ngIf="state !== 'idle'">

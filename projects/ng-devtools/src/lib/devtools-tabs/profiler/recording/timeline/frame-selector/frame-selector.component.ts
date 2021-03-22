@@ -110,12 +110,12 @@ export class FrameSelectorComponent implements OnInit, OnDestroy {
     const newVal = this.startFrameIndex + value;
     this.selectedFrameIndexes = new Set([newVal]);
     if (newVal > -1 && newVal < this.frameCount) {
-      this._selectFrames({ indexes: this.selectedFrameIndexes });
+      this.updateSelectedFramesState();
     }
   }
 
-  private _selectFrames({ indexes }: { indexes: Set<number> }): void {
-    const sortedIndexes = [...indexes].sort((a, b) => a - b);
+  updateSelectedFramesState(): void {
+    const sortedIndexes = [...this.selectedFrameIndexes].sort((a, b) => a - b);
     this.startFrameIndex = sortedIndexes[0];
     this.endFrameIndex = sortedIndexes[sortedIndexes.length - 1];
     this._ensureVisible(this.startFrameIndex);
@@ -142,7 +142,7 @@ export class FrameSelectorComponent implements OnInit, OnDestroy {
       this.selectedFrameIndexes = new Set([idx]);
     }
 
-    this._selectFrames({ indexes: this.selectedFrameIndexes });
+    this.updateSelectedFramesState();
   }
 
   private _ensureVisible(index: number): void {

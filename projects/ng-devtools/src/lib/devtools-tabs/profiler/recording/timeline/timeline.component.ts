@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, Output, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnDestroy, ViewChild } from '@angular/core';
 import { ProfilerFrame } from 'protocol';
 import { GraphNode } from './record-formatter/record-formatter';
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { map, share } from 'rxjs/operators';
 import { mergeFrames } from './record-formatter/frame-merger';
 import { createFilter, Filter, noopFilter } from './filter';
+import { FrameSelectorComponent } from './frame-selector/frame-selector.component';
 
 export enum VisualizationMode {
   FlameGraph,
@@ -21,15 +22,24 @@ const MAX_HEIGHT = 50;
 })
 export class TimelineComponent implements OnDestroy {
   @Input() set stream(data: Observable<ProfilerFrame[]>) {
+    // Reset frame state when a new stream is input
+    this.frame = null;
+    if (this.frameSelector) {
+      this.frameSelector.selectedFrameIndexes = new Set<number>();
+      this.frameSelector.startFrameIndex = -1;
+      this.frameSelector.endFrameIndex = -1;
+    }
+
     if (this._subscription) {
       this._subscription.unsubscribe();
+      this._graphDataSubject.next([]);
     }
     this._allRecords = [];
     this._filtered = [];
     this._maxDuration = -Infinity;
+
     this._subscription = data.subscribe({
       next: (frames: ProfilerFrame[]): void => {
-        console.log(frames);
         this._processFrames(frames);
       },
       complete: (): void => {
@@ -38,6 +48,9 @@ export class TimelineComponent implements OnDestroy {
     });
   }
   @Output() exportProfile = new EventEmitter<void>();
+
+  @ViewChild(FrameSelectorComponent) frameSelector: FrameSelectorComponent;
+
   visualizationMode = VisualizationMode.BarGraph;
   changeDetection = false;
   frame: ProfilerFrame | null = null;
