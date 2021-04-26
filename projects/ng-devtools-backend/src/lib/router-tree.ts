@@ -1,5 +1,7 @@
 import { Route } from 'protocol';
 import { Router, Routes, Route as AngularRoute } from '@angular/router';
+import { IndexedNode } from './hooks/identity-tracker';
+import { queryDirectiveForest } from './component-tree';
 
 export function parseRoutes(router: Router): Route {
   const rootName = (router as any).rootComponentType?.name || 'no-name';
@@ -70,3 +72,53 @@ function childRouteName(child: AngularRoute): string {
     return 'no-name-route';
   }
 }
+
+interface FindRouterStrategy {
+  find(forest: IndexedNode[]): Router | false;
+}
+
+class FindFromRootComponentRouter implements FindRouterStrategy {
+  find(forest: IndexedNode[]): Router | false {
+    return queryDirectiveForest([0], forest)?.component?.instance?.router ?? false;
+  }
+}
+
+class FindFromRouterLinkWithHref implements FindRouterStrategy {
+  find(forest: IndexedNode[]): Router | false {
+    for (const indexedNode of forest) {
+      const routerLinkWithHref = indexedNode.directives.find((nodeToFind) => nodeToFind.name === 'RouterLinkWithHref');
+      if (routerLinkWithHref) {
+        return routerLinkWithHref.instance?.router ?? false;
+      }
+
+      const router = this.find(indexedNode.children);
+      if (router) {
+        return router;
+      }
+    }
+
+    return false;
+  }
+}
+
+// Order determines which strategy is attempted first
+const findRouterStrategies: FindRouterStrategy[] = [
+  new FindFromRootComponentRouter(),
+  new FindFromRouterLinkWithHref(),
+];
+
+/**
+ *
+ * @param forest directive forest to search for router instance
+ * @returns router instance if it can be found with a FindRouterStrategy, returns false otherwise
+ */
+export const findRouter = (forest: IndexedNode[]): Router | false => {
+  for (const strategy of findRouterStrategies) {
+    const router = strategy.find(forest);
+    if (router) {
+      return router;
+    }
+  }
+
+  return false;
+};
