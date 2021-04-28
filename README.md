@@ -1,14 +1,13 @@
-# Angular Devtools
+# Angular DevTools
 
 ## Table of content
 
-- [Angular Devtools](#angular-devtools)
+- [Angular DevTools](#angular-devtools)
   - [Table of content](#table-of-content)
   - [Introduction](#introduction)
   - [Inspecting Code](#inspecting-code)
   - [Supported version](#supported-version)
-  - [Working on Angular Devtools](#working-on-angular-devtools)
-    - [Development environment](#development-environment)
+  - [Working on Angular DevTools](#working-on-angular-devtools)
     - [Installing and Running locally](#installing-and-running-locally)
     - [Build and Install on Chrome locally](#build-and-install-on-chrome-locally)
   - [Reporting issues](#reporting-issues)
@@ -18,31 +17,23 @@
 
 ## Introduction
 
-Angular Devtools is a Chrome Developer Tools extension for debugging Angular applications.
+Angular DevTools is a Chrome DevTools extension for debugging and profiling Angular applications.
 
-You can install the extension from: [Chrome Store](#)
+You can install the extension from: [Chrome Web Store](#)
 
 ## Inspecting Code
 
-Angular DevTools is a Chrome extension that provides debugging and profiling capabilities for Angular applications. A hard requirement is that the Angular application is running in development mode. If you plan to read the original source code, it is a good idea to generate source maps. Otherwise you will be forced to work with the compiled JavaScript code.
+Angular DevTools is a Chrome extension that provides debugging and profiling capabilities for Angular applications. A hard requirement is that the Angular application is running in development mode.
 
 ## Supported version
 
-Angular Devtools supports Angular v9 and above, with Ivy enabled.
+Angular DevTools supports Angular v9 and above, with Ivy enabled.
 
-## Working on Angular Devtools
-
-### Development environment
-
-To develop the Devtools extension, the following environment is used:
-
-- Node
-- NPM
-- TypeScript
+## Working on Angular DevTools
 
 ### Installing and Running locally
 
-To install and run Devtools locally, perform the following steps:
+To setup your local development environment for Angular DevTools, perform the following steps:
 
 ```bash
 git clone git://github.com/rangle/angular-devtools
