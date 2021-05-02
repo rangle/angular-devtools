@@ -16,9 +16,9 @@ workflows:
             - run:
                 name: Run Linting
                 command: yarn lint
-            - run:
-                name: Run Unit Tests
-                command: yarn test:ci
+            # - run:
+            #     name: Run Unit Tests
+            #     command: yarn test:ci
       - cypress/run:
           name: 'E2E Tests - Chrome'
           browser: chrome
