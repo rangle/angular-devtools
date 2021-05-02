@@ -5,6 +5,8 @@ executors:
   node-and-browsers:
     docker:
       - image: cypress/browsers:node14.16.0-chrome89-ff86
+    environment:
+      - CHROME_BIN: /usr/bin/google-chrome
 workflows:
   test-and-build:
     jobs:
@@ -12,8 +14,6 @@ workflows:
           name: Setup
           yarn: true
           executor: node-and-browsers
-          environment:
-            - CHROME_BIN: /usr/bin/google-chrome
           post-steps:
             - run:
                 name: Run Linting
