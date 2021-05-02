@@ -12,6 +12,7 @@ workflows:
           name: Setup
           yarn: true
           executor: node-and-browsers
+          working_directory: ~/repo
           post-steps:
             - run:
                 name: Run Linting
