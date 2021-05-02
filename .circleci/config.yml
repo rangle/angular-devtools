@@ -12,7 +12,8 @@ workflows:
           name: Setup
           yarn: true
           executor: node-and-browsers
-          working_directory: ~/repo
+          environment:
+            - CHROME_BIN: /usr/bin/google-chrome
           post-steps:
             - run:
                 name: Run Linting
