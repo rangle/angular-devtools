@@ -1,5 +1,6 @@
 import { ReplaySubject, Subject } from 'rxjs';
 import { Injectable, RendererFactory2, Renderer2 } from '@angular/core';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 export type Theme = 'dark-theme' | 'light-theme';
 
@@ -21,6 +22,7 @@ export class ThemeService {
     this.renderer.removeClass(document.body, removeClass);
     this.renderer.addClass(document.body, addClass);
     this.currentTheme.next(addClass);
+    localStorage.setItem('prefers-color-scheme: dark', isDark.toString());
   }
 
   initializeThemeWatcher(): void {
@@ -30,6 +32,9 @@ export class ThemeService {
   }
 
   private get _prefersDarkMode(): boolean {
-    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return (
+      (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ||
+      (localStorage && coerceBooleanProperty(localStorage.getItem('prefers-color-scheme: dark')))
+    );
   }
 }
