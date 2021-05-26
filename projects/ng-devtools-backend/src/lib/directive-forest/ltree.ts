@@ -71,22 +71,29 @@ export class LTreeStrategy {
     const tNode = data[idx];
     const node = lView[idx][ELEMENT];
     const element = (node.tagName || node.nodeName).toLowerCase();
-    if (tNode) {
-      for (let i = tNode.directiveStart; i < tNode.directiveEnd; i++) {
-        const instance = lView[i];
-        const dirMeta = data[i];
-        if (dirMeta && dirMeta.template) {
-          component = {
-            name: element,
-            isElement: isCustomElement(node),
-            instance,
-          };
-        } else if (dirMeta) {
-          directives.push({
-            name: getDirectiveName(instance),
-            instance,
-          });
-        }
+    if (!tNode) {
+      return {
+        nativeElement: node,
+        children: [],
+        element,
+        directives: [],
+        component: null,
+      };
+    }
+    for (let i = tNode.directiveStart; i < tNode.directiveEnd; i++) {
+      const instance = lView[i];
+      const dirMeta = data[i];
+      if (dirMeta && dirMeta.template) {
+        component = {
+          name: element,
+          isElement: isCustomElement(node),
+          instance,
+        };
+      } else if (dirMeta) {
+        directives.push({
+          name: getDirectiveName(instance),
+          instance,
+        });
       }
     }
     return {
