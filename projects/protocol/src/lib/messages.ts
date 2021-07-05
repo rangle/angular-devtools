@@ -158,8 +158,10 @@ export type Topic = keyof Events;
 export interface Events {
   handshake: () => void;
   shutdown: () => void;
+  queryIframes: () => void;
   queryNgAvailability: () => void;
   ngAvailability: (config: { version: string | undefined | boolean; devMode: boolean; ivy: boolean }) => void;
+  appIframes: (data: { frames: string[] | null }) => void;
 
   inspectorStart: () => void;
   inspectorEnd: () => void;

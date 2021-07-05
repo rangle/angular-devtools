@@ -44,3 +44,17 @@ export const getAngularVersion = (): string | null => {
   }
   return el.getAttribute('ng-version');
 };
+
+export const getIframes = (): string[] | null => {
+  const frames = document.getElementsByTagName('iframe');
+  if (!frames.length) {
+    return null;
+  }
+
+  const frameTitles: string[] = [];
+  for (let i = 0; i < frames.length; i++) {
+    const frameTitle = frames[i].contentDocument?.title || `Frame - ${i}`;
+    frameTitles.push(frameTitle);
+  }
+  return frameTitles;
+};

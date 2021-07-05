@@ -20,6 +20,7 @@ import {
   appIsAngularInDevMode,
   appIsSupportedAngularVersion,
   appIsAngularIvy,
+  getIframes,
 } from './angular-check';
 import { debounceTime } from 'rxjs/operators';
 import { disableTimingAPI, enableTimingAPI, initializeOrGetDirectiveForestHooks } from './hooks';
@@ -31,6 +32,7 @@ export const subscribeToClientEvents = (messageBus: MessageBus<Events>): void =>
   messageBus.on('getLatestComponentExplorerView', getLatestComponentExplorerViewCallback(messageBus));
 
   messageBus.on('queryNgAvailability', checkForAngularCallback(messageBus));
+  messageBus.on('queryIframes', checkForIframesCallback(messageBus));
 
   messageBus.on('startProfiling', startProfilingCallback(messageBus));
   messageBus.on('stopProfiling', stopProfilingCallback(messageBus));
@@ -92,6 +94,7 @@ const getLatestComponentExplorerViewCallback = (messageBus: MessageBus<Events>) 
 };
 
 const checkForAngularCallback = (messageBus: MessageBus<Events>) => () => checkForAngular(messageBus);
+const checkForIframesCallback = (messageBus: MessageBus<Events>) => () => checkForIframes(messageBus);
 const getRoutesCallback = (messageBus: MessageBus<Events>) => () => getRoutes(messageBus);
 
 const startProfilingCallback = (messageBus: MessageBus<Events>) => () =>
@@ -144,12 +147,29 @@ const getRoutes = (messageBus: MessageBus<Events>) => {
   messageBus.emit('updateRouterTree', [[]]);
 };
 
+const checkForIframes = (messageBus: MessageBus<Events>): void => {
+  console.log('checkForIframes');
+  const frames = getIframes();
+  console.log(frames);
+  if (frames) {
+    messageBus.emit('appIframes', [{ frames }]);
+  }
+};
+
 const checkForAngular = (messageBus: MessageBus<Events>): void => {
+  console.log('checkForAngular');
+  const frames = getIframes();
+  console.log('frames', frames);
   const ngVersion = getAngularVersion();
   const appIsIvy = appIsAngularIvy();
   if (!ngVersion) {
-    setTimeout(() => checkForAngular(messageBus), 500);
-    return;
+    if (frames) {
+      messageBus.emit('appIframes', [{ frames }]);
+      return;
+    } else {
+      setTimeout(() => checkForAngular(messageBus), 500);
+      return;
+    }
   }
 
   if (appIsIvy && appIsAngularInDevMode() && appIsSupportedAngularVersion()) {

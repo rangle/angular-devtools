@@ -26,8 +26,11 @@
           matTooltip="You see this message because the app is still loading, or this is not an Angular application"
           >i</span
         >
-        Angular application not detected.
+        Angular application not detected. a{{ frames?.length }}a
       </p>
+      <pre>
+        {{ frames | json }}
+      </pre>
     </ng-container>
     <ng-template #loading>
       <div class="initializing" *ngIf="angularExists === null">

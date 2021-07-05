@@ -20,12 +20,17 @@ export class DevToolsComponent implements OnInit, OnDestroy {
   angularVersion: string | boolean | undefined = undefined;
   angularIsInDevMode = true;
   ivy: boolean;
+  frames: string[] | null;
 
   constructor(private _messageBus: MessageBus<Events>, private _themeService: ThemeService) {}
 
   private _interval$ = interval(500).subscribe((attempt) => {
-    if (attempt === 10) {
+    console.log(attempt);
+    if (attempt === 5) {
       this.angularExists = false;
+      // this._interval$.unsubscribe();
+      this._messageBus.emit('queryIframes');
+      console.log('aaaaa-queryIframes');
     }
     this._messageBus.emit('queryNgAvailability');
   });
@@ -33,7 +38,14 @@ export class DevToolsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this._themeService.initializeThemeWatcher();
 
+    this._messageBus.once('appIframes', (data) => {
+      console.log('queryIframesqueryIframesqueryIframes', data);
+      // console.log('frames', frames);
+      this.frames = data.frames;
+    });
+
     this._messageBus.once('ngAvailability', ({ version, devMode, ivy }) => {
+      console.log('version, devMode, ivy', version, devMode, ivy);
       this.angularExists = !!version;
       this.angularVersion = version;
       this.angularIsInDevMode = devMode;
