@@ -44,7 +44,7 @@
     "@angular/material": "~12.2.0",
     "@angular/platform-browser": "github:angular/platform-browser-builds#bac89faae3851baacf3e8ba6be8284b89756b95e",
     "@angular/platform-browser-dynamic": "github:angular/platform-browser-dynamic-builds#3c03b34e6131a667a9ae13b647dc14ba36d12f97",
-    "d3": "^5.7.0",
+    "d3": "^7.0.0",
     "memo-decorator": "^2.0.1",
     "ngx-flamegraph": "0.0.10",
     "rxjs": "~6.6.0",
