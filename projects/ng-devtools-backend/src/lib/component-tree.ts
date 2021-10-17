@@ -10,9 +10,17 @@ import {
   UpdatedStateData,
 } from 'protocol';
 import { buildDirectiveTree, getLViewFromDirectiveOrElementInstance } from './directive-forest';
-import { ChangeDetectionStrategy } from '@angular/core';
 
 const ngDebug = () => (window as any).ng;
+
+/**
+ * Duplicate of ChangeDetectionStrategy from @angular/core
+ * to avoid pulling in the entire package.
+ */
+const enum ChangeDetectionStrategy {
+  OnPush = 0,
+  Default = 1,
+}
 
 export interface DirectiveInstanceType {
   instance: any;
