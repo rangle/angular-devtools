@@ -29,9 +29,18 @@
             "stylePreprocessorOptions": {
               "includePaths": ["node_modules"]
             },
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": ["semver-dsl", "webtreemap"]
           },
           "configurations": {
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            },
             "production": {
               "fileReplacements": [
                 {
@@ -85,13 +94,17 @@
             "browserTarget": "shell-dev:build"
           },
           "configurations": {
+            "development": {
+              "browserTarget": "shell-dev:build:development"
+            },
             "production": {
               "browserTarget": "shell-dev:build:production"
             },
             "e2e": {
               "browserTarget": "shell-dev:build:e2e"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
