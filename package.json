@@ -46,7 +46,7 @@
     "@angular/platform-browser-dynamic": "github:angular/platform-browser-dynamic-builds#9e478221d7065200684a1eece31b99d287674da8",
     "d3": "^5.7.0",
     "memo-decorator": "^2.0.1",
-    "ngx-flamegraph": "0.0.10",
+    "ngx-flamegraph": "0.0.11",
     "rxjs": "~6.6.0",
     "semver-dsl": "^1.0.1",
     "tslib": "^2.0.0",
