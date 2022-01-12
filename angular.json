@@ -16,6 +16,7 @@
       "architect": {
         "build": {
           "builder": "ngx-build-plus:browser",
+          "defaultConfiguration": "production",
           "options": {
             "outputPath": "dist/shell-dev",
             "index": "src/index.html",
@@ -32,6 +33,14 @@
             "scripts": []
           },
           "configurations": {
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            },
             "production": {
               "fileReplacements": [
                 {
@@ -84,7 +93,11 @@
             "extraWebpackConfig": "shell-dev-webpack.config.js",
             "browserTarget": "shell-dev:build"
           },
+          "defaultConfiguration": "development",
           "configurations": {
+            "development": {
+              "browserTarget": "shell-dev:build:development"
+            },
             "production": {
               "browserTarget": "shell-dev:build:production"
             },
@@ -148,6 +161,7 @@
       "architect": {
         "build": {
           "builder": "ngx-build-plus:browser",
+          "defaultConfiguration": "production",
           "options": {
             "outputPath": "dist/shell-chrome",
             "extraWebpackConfig": "projects/shell-chrome/shell-chrome-webpack.config.js",
@@ -159,7 +173,6 @@
             "aot": true,
             "assets": [
               "projects/shell-chrome/src/assets",
-              "projects/shell-chrome/src/manifest.json",
               "projects/shell-chrome/src/devtools.html",
               "projects/shell-chrome/src/popups"
             ],
@@ -170,6 +183,14 @@
             "scripts": []
           },
           "configurations": {
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            },
             "production": {
               "fileReplacements": [
                 {
@@ -189,7 +210,6 @@
               },
               "outputHashing": "none",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "buildOptimizer": true,
@@ -205,10 +225,14 @@
         },
         "serve": {
           "builder": "ngx-build-plus:dev-server",
+          "defaultConfiguration": "development",
           "options": {
             "browserTarget": "shell-chrome:build"
           },
           "configurations": {
+            "development": {
+              "browserTarget": "shell-chrome:build:development"
+            },
             "production": {
               "browserTarget": "shell-chrome:build:production"
             }
