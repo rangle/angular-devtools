@@ -1,0 +1,21 @@
+{
+  "name": "shared-utils",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^11.0.0",
+    "@angular/core": "^11.0.0"
+  },
+  "main": "bundles/shared-utils.umd.js",
+  "module": "fesm2015/shared-utils.js",
+  "es2015": "fesm2015/shared-utils.js",
+  "esm2015": "esm2015/shared-utils.js",
+  "fesm2015": "fesm2015/shared-utils.js",
+  "typings": "shared-utils.d.ts",
+  "sideEffects": false,
+  "dependencies": {
+    "tslib": "^2.1.0"
+  },
+  "scripts": {
+    "prepublishOnly": "node --eval \"console.error('ERROR: Trying to publish a package that has been compiled by Ivy. This is not allowed.\\nPlease delete and rebuild the package, without compiling with Ivy, before attempting to publish.\\n')\" && exit 1"
+  }
+}

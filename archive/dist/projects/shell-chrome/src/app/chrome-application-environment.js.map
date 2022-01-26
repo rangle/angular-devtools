@@ -1,0 +1,1 @@
+{"version":3,"file":"chrome-application-environment.js","sourceRoot":"","sources":["../../../../../projects/shell-chrome/src/app/chrome-application-environment.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,sBAAsB,EAAe,MAAM,aAAa,CAAC;AAClE,OAAO,EAAE,WAAW,EAAE,MAAM,6BAA6B,CAAC;AAE1D,MAAM,OAAO,4BAA6B,SAAQ,sBAAsB;IACtE,IAAI,WAAW;QACb,OAAO,WAAW,CAAC;IACrB,CAAC;CACF"}

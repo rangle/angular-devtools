@@ -1,0 +1,38 @@
+import { AfterViewInit, OnDestroy, OnInit } from '@angular/core';
+import { Events, MessageBus, Route } from 'protocol';
+import { DirectiveExplorerComponent } from './directive-explorer/directive-explorer.component';
+import { ApplicationEnvironment } from '../application-environment';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { TabUpdate } from './tab-update';
+import { Theme, ThemeService } from '../theme-service';
+import { MatTabNav } from '@angular/material/tabs';
+import * as i0 from "@angular/core";
+export declare class DevToolsTabsComponent implements OnInit, OnDestroy, AfterViewInit {
+    tabUpdate: TabUpdate;
+    themeService: ThemeService;
+    private _messageBus;
+    private _applicationEnvironment;
+    angularVersion: string | undefined;
+    directiveExplorer: DirectiveExplorerComponent;
+    navbar: MatTabNav;
+    activeTab: 'Components' | 'Profiler' | 'Router Tree';
+    inspectorRunning: boolean;
+    routerTreeEnabled: boolean;
+    private _currentThemeSubscription;
+    currentTheme: Theme;
+    routes: Route[];
+    constructor(tabUpdate: TabUpdate, themeService: ThemeService, _messageBus: MessageBus<Events>, _applicationEnvironment: ApplicationEnvironment);
+    ngOnInit(): void;
+    get tabs(): string[];
+    ngAfterViewInit(): void;
+    ngOnDestroy(): void;
+    get latestSHA(): string;
+    changeTab(tab: 'Profiler' | 'Components' | 'Router Tree'): void;
+    toggleInspector(): void;
+    emitInspectorEvent(): void;
+    toggleInspectorState(): void;
+    refresh(): void;
+    toggleTimingAPI(change: MatSlideToggleChange): void;
+    static ɵfac: i0.ɵɵFactoryDeclaration<DevToolsTabsComponent, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<DevToolsTabsComponent, "ng-devtools-tabs", never, { "angularVersion": "angularVersion"; }, {}, never, never>;
+}

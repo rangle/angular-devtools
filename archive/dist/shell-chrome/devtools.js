@@ -1,0 +1,1 @@
+(self.___ngDevToolsRuntime=self.___ngDevToolsRuntime||[]).push([[308],{499:()=>{chrome.devtools.panels.create("Angular","assets/icon-bw16.png","index.html")}},e=>{e(e.s=499)}]);

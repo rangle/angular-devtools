@@ -1,0 +1,21 @@
+{
+  "name": "ng-devtools-backend",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^11.0.0",
+    "@angular/core": "^11.0.0"
+  },
+  "main": "bundles/ng-devtools-backend.umd.js",
+  "module": "fesm2015/ng-devtools-backend.js",
+  "es2015": "fesm2015/ng-devtools-backend.js",
+  "esm2015": "esm2015/ng-devtools-backend.js",
+  "fesm2015": "fesm2015/ng-devtools-backend.js",
+  "typings": "ng-devtools-backend.d.ts",
+  "sideEffects": false,
+  "dependencies": {
+    "tslib": "^2.1.0"
+  },
+  "scripts": {
+    "prepublishOnly": "node --eval \"console.error('ERROR: Trying to publish a package that has been compiled by Ivy. This is not allowed.\\nPlease delete and rebuild the package, without compiling with Ivy, before attempting to publish.\\n')\" && exit 1"
+  }
+}

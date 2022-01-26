@@ -1,0 +1,16 @@
+import { Subject } from 'rxjs';
+import { share } from 'rxjs/operators';
+// This service is used to notify the CDK virtual scroll parents
+// when the tab has changed. Alternatively, we risk to have broken
+// layout since the virtual scroll is nested inside of a TabGroup
+// which doesn't have consistent dimensions when collapsed and expanded.
+export class TabUpdate {
+    constructor() {
+        this._tabUpdate = new Subject();
+        this.tabUpdate$ = this._tabUpdate.asObservable().pipe(share());
+    }
+    notify() {
+        this._tabUpdate.next();
+    }
+}
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoidGFiLXVwZGF0ZS5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uLy4uL3Byb2plY3RzL25nLWRldnRvb2xzL3NyYy9saWIvZGV2dG9vbHMtdGFicy90YWItdXBkYXRlLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBLE9BQU8sRUFBRSxPQUFPLEVBQUUsTUFBTSxNQUFNLENBQUM7QUFDL0IsT0FBTyxFQUFFLEtBQUssRUFBRSxNQUFNLGdCQUFnQixDQUFDO0FBRXZDLGdFQUFnRTtBQUNoRSxrRUFBa0U7QUFDbEUsaUVBQWlFO0FBQ2pFLHdFQUF3RTtBQUN4RSxNQUFNLE9BQU8sU0FBUztJQUF0QjtRQUNVLGVBQVUsR0FBRyxJQUFJLE9BQU8sRUFBRSxDQUFDO1FBRW5DLGVBQVUsR0FBRyxJQUFJLENBQUMsVUFBVSxDQUFDLFlBQVksRUFBRSxDQUFDLElBQUksQ0FBQyxLQUFLLEVBQUUsQ0FBQyxDQUFDO0lBSzVELENBQUM7SUFIQyxNQUFNO1FBQ0osSUFBSSxDQUFDLFVBQVUsQ0FBQyxJQUFJLEVBQUUsQ0FBQztJQUN6QixDQUFDO0NBQ0YiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyBTdWJqZWN0IH0gZnJvbSAncnhqcyc7XG5pbXBvcnQgeyBzaGFyZSB9IGZyb20gJ3J4anMvb3BlcmF0b3JzJztcblxuLy8gVGhpcyBzZXJ2aWNlIGlzIHVzZWQgdG8gbm90aWZ5IHRoZSBDREsgdmlydHVhbCBzY3JvbGwgcGFyZW50c1xuLy8gd2hlbiB0aGUgdGFiIGhhcyBjaGFuZ2VkLiBBbHRlcm5hdGl2ZWx5LCB3ZSByaXNrIHRvIGhhdmUgYnJva2VuXG4vLyBsYXlvdXQgc2luY2UgdGhlIHZpcnR1YWwgc2Nyb2xsIGlzIG5lc3RlZCBpbnNpZGUgb2YgYSBUYWJHcm91cFxuLy8gd2hpY2ggZG9lc24ndCBoYXZlIGNvbnNpc3RlbnQgZGltZW5zaW9ucyB3aGVuIGNvbGxhcHNlZCBhbmQgZXhwYW5kZWQuXG5leHBvcnQgY2xhc3MgVGFiVXBkYXRlIHtcbiAgcHJpdmF0ZSBfdGFiVXBkYXRlID0gbmV3IFN1YmplY3QoKTtcblxuICB0YWJVcGRhdGUkID0gdGhpcy5fdGFiVXBkYXRlLmFzT2JzZXJ2YWJsZSgpLnBpcGUoc2hhcmUoKSk7XG5cbiAgbm90aWZ5KCk6IHZvaWQge1xuICAgIHRoaXMuX3RhYlVwZGF0ZS5uZXh0KCk7XG4gIH1cbn1cbiJdfQ==

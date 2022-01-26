@@ -1,0 +1,1 @@
+{"version":3,"file":"environment.js","sourceRoot":"","sources":["../../../../../projects/shell-chrome/src/environments/environment.ts"],"names":[],"mappings":"AAAA,gFAAgF;AAChF,0EAA0E;AAC1E,gEAAgE;AAMhE,MAAM,CAAC,MAAM,WAAW,GAAG;IACzB,UAAU,EAAE,KAAK;IACjB,OAAO,EAAE;QACP,GAAG,EAAE;YACH,UAAU,EAAE,OAAO,CAAC,GAAG,CAAC,UAAU;SACnC;KACF;CACF,CAAC;AAEF;;;;;;GAMG;AACH,mEAAmE"}

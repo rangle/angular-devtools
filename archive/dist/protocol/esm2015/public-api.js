@@ -1,0 +1,7 @@
+/*
+ * Public API Surface of protocol
+ */
+export * from './lib/messages';
+export * from './lib/message-bus';
+export * from './lib/priority-aware-message-bus';
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicHVibGljLWFwaS5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uLy4uL3Byb2plY3RzL3Byb3RvY29sL3NyYy9wdWJsaWMtYXBpLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBOztHQUVHO0FBRUgsY0FBYyxnQkFBZ0IsQ0FBQztBQUMvQixjQUFjLG1CQUFtQixDQUFDO0FBQ2xDLGNBQWMsa0NBQWtDLENBQUMiLCJzb3VyY2VzQ29udGVudCI6WyIvKlxuICogUHVibGljIEFQSSBTdXJmYWNlIG9mIHByb3RvY29sXG4gKi9cblxuZXhwb3J0ICogZnJvbSAnLi9saWIvbWVzc2FnZXMnO1xuZXhwb3J0ICogZnJvbSAnLi9saWIvbWVzc2FnZS1idXMnO1xuZXhwb3J0ICogZnJvbSAnLi9saWIvcHJpb3JpdHktYXdhcmUtbWVzc2FnZS1idXMnO1xuIl19
